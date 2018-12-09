@@ -1,0 +1,33 @@
+<div class="title">Players ({ifset $users}{$users|length}{else}0{/ifset})</div>
+<div class="head">
+	<table>
+		<colgroup>
+			<col width="60%">
+			<col width="40%">
+		</colgroup>
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th class="right">Distance</th>
+		</tr>
+		</thead>
+	</table>
+</div>
+<div class="list">
+	<table>
+		<colgroup>
+			<col width="60%">
+			<col width="40%">
+		</colgroup>
+		<tbody>
+		{ifset $users}
+			{foreach $users AS $user}
+			<tr data-id="{$user[id]}">
+				<td>{$user[name]}</td>
+				<td class="right">{$user[distance]} km</td>
+			</tr>
+			{/foreach}
+		{/ifset}
+		</tbody>
+	</table>
+</div>

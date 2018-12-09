@@ -1,0 +1,72 @@
+{layout @layout.latte}
+{block content}
+<div class="view" data-view="loading">
+	<div class="loadingbox default-box">
+		<div class="loader large"></div>
+	</div>
+</div>
+<div class="view" data-view="login">
+	<div class="loginbox default-box">
+		<div class="label">Choose you nickname</div>
+		<div class="input">
+			<input type="text" id="nickinput" placeholder="Nickname" maxlength="20"/><div class="loader small"></div>
+		</div>
+	</div>
+</div>
+<div class="view" data-view="rooms">
+	<div class="roomlistbox default-box">
+		<div class="panel wrap-rooms">
+			<div class="rooms" data-js="rooms">
+				{include rooms.latte}
+			</div>
+			<div class="foot">
+				<div class="left">
+					<div id="join-room-button" class="button disabled">Join
+					</div><div id="create-room-button" class="button">Create room
+					</div>
+				</div><div class="right">
+					<div class="loader"></div>
+				</div>
+			</div>
+		</div><div class="panel wrap-users">
+			<div class="users" data-js="users">
+				{include users.latte}
+			</div>
+		</div>
+	</div>
+</div>
+<div data-modal="create-room">
+	<div class="createroombox">
+		<form id="create-room-form">
+		<input type="submit" style="display:none"/>
+		<div class="form-row">
+			<span class="label">Name:</span>
+			<input type="text" id="name" maxlength="40" autocomplete="off" autofocus/>
+		</div>
+		<div class="form-row">
+			<span class="label">Password:</span>
+			<input type="text" id="password" maxlength="255" autocomplete="off" disabled/>
+		</div>
+		<div class="form-row">
+			<span class="label">Max players:</span>
+			<select id="maxplayers">
+				<option value="2">2</option>
+				<option value="4">4</option>
+				<option value="6">6</option>
+				<option value="8">8</option>
+				<option value="10" selected>10</option>
+				<option value="12">12</option>
+				<option value="14">14</option>
+				<option value="16">16</option>
+				<option value="18">18</option>
+				<option value="20">20</option>
+			</select>
+		</div>
+		</form>
+	</div>
+</div>
+<div class="view" data-view="game">
+	<div class="game">
+		<canvas id="game-canvas"></canvas>
+	</div>
+</div>

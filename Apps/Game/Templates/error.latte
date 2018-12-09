@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+	<meta name="robots" content="noindex,nofollow,noarchive"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="initial-scale=1, user-scalable=yes">
+	<title>Chyba</title>
+	<style>
+		@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600&subset=latin,latin-ext");
+		body { color:#333; font-family:"Open Sans",Arial,Helvetica,sans-serif; font-size:82%; line-height:18px; background:#F0F3F5; }
+		#error { display:flex; position:absolute; top:0px; left:0px; width:100%; height:80%; align-items:center; justify-content:center; }
+		#error h1 { font-size:4em; line-height:1.5em; margin:0px 40px; margin-bottom:20px; }
+		#error p { font-size:2em; font-weight:normal; line-height:1.5em; margin:0px 40px; }
+	</style>
+</head>
+<body>
+<div id="error">
+	<div>
+		{ifset $code}<h1>{$code}</h1>{else}<h1>Chyba</h1>{/ifset}
+		<p>Omlouváme se,<br />stránka je dočasně nedostupná.</p>
+	</div>
+</div>
+</body>
+</html>

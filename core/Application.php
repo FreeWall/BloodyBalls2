@@ -1,6 +1,18 @@
 <?php
 namespace Core;
 
+use Core\Components\Component;
+use Core\Http\RequestFactory;
+use Core\Http\Session;
+use Core\Less\Less;
+use Core\Minify\Minify;
+use Core\Presenters\Presenter;
+use Core\Router\Router;
+use Core\Router\Routes\NullRoute;
+use Core\Router\RoutesFactory;
+use Dibi\Bridges\Tracy\Panel;
+use Tracy\Debugger;
+
 abstract class Application {
 
 	private static $instance;
@@ -17,13 +29,8 @@ abstract class Application {
 		self::$type = $type;
 		try {
 			Config::load();
-			if(Environment::get() != Environment::CONSOLE){
-				Debugger::enable(Config::get("environment")['production'] ? Debugger::PRODUCTION : Debugger::DEVELOPMENT);
-				Environment::checkExtensions();
-				self::getSession()->start();
-				RoutesFactory::createRoutes();
-			}
-			SuperDatabase::init();
+			self::getSession()->start();
+			RoutesFactory::createRoutes();
 			$this->minifyJS();
 		} catch(\Exception $e){
 			if(Debugger::isEnabled()) Debugger::exceptionHandler($e);
@@ -66,11 +73,6 @@ abstract class Application {
 	public static function getSession():Session {
 		if(!self::$session) self::$session = new Session(self::getHttpRequest(),self::getHttpResponse());
 		return self::$session;
-	}
-
-	public static function getSuperStorage():Storage {
-		if(!self::$storage) self::$storage = new Storage(SuperDatabase::getConnection());
-		return self::$storage;
 	}
 
 	public static function getAppName():string {
@@ -132,13 +134,10 @@ abstract class Application {
 	}
 
 	public function loadStyles(){
-		$type = strtolower(self::$type);
-		$less = new Less(Config::CONTENT_DIR."css/".$type."/styles.less",Config::CONTENT_DIR."css/".$type."/styles.css");
-		$less->setLastModified(self::getSuperStorage()->get('styles-'.$type)['parsed'] ?? 0);
+		$less = new Less(Config::STATIC_DIR."css/styles.less",Config::STATIC_DIR."css//styles.css");
+		$less->setLastModified(filemtime(Config::STATIC_DIR."css/styles.less"));
 		try {
-			if($less->parse()){
-				self::getSuperStorage()->add('styles-'.$type,["hash" => substr(md5(time()),0,16),"parsed" => time()]);
-			}
+			$less->parse();
 		} catch(\Exception $e){
 			if(Debugger::isEnabled()) Debugger::exceptionHandler($e);
 			$this->runErrorPresenter();
@@ -146,16 +145,9 @@ abstract class Application {
 	}
 
 	public function minifyJS(){
-		$minify = new Minify(Config::CONTENT_DIR."js/library.min.js",[
-			Config::CONTENT_DIR."js/utils/forms.js",
-			Config::CONTENT_DIR."js/utils/controls.js",
-			Config::CONTENT_DIR."js/utils/strings.js",
-			Config::CONTENT_DIR."js/utils/validators.js",
-			Config::CONTENT_DIR."js/utils/utils.js",
-			Config::CONTENT_DIR."js/utils/table.js",
-			Config::CONTENT_DIR."js/utils/modalbox.js",
-			Config::CONTENT_DIR."js/passmeter/passmeter.js",
-		]);
+		$files = json_decode(file_get_contents(Config::STATIC_DIR."js/library.json"),true);
+		foreach($files AS $idx => $file) $files[$idx] = Config::STATIC_DIR."js/".$file;
+		$minify = new Minify(Config::STATIC_DIR."js/library.min.js",$files);
 		try {
 			$minify->parse();
 		} catch(\Exception $e){
@@ -166,9 +158,6 @@ abstract class Application {
 
 	public function getGlobalParams(){
 		return [
-			"config" => [
-				"shopmaker" => Config::get("shopmaker"),
-			],
 			"version" => [
 				"build" => Config::VERSION,
 				"branch" => basename(BASEDIR),

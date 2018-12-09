@@ -1,0 +1,37 @@
+<div class="title">Rooms ({ifset $rooms}{$rooms|length}{else}0{/ifset})</div>
+<div class="head">
+	<table>
+		<colgroup>
+			<col width="60%">
+			<col width="20%">
+			<col width="20%">
+		</colgroup>
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Players</th>
+			<th class="right">Distance</th>
+		</tr>
+		</thead>
+	</table>
+</div>
+<div class="list">
+	<table>
+		<colgroup>
+			<col width="60%">
+			<col width="20%">
+			<col width="20%">
+		</colgroup>
+		<tbody>
+		{ifset $rooms}
+			{foreach $rooms AS $room}
+				<tr data-id="{$room[id]}">
+					<td>{if $room[password]}<i class="fa fa-lock"></i>{/if}<span class="va-middle">{$room[name]}</span></td>
+					<td>{$room[players]}/{$room[maxplayers]}</td>
+					<td class="right">{$room[distance]} km</td>
+				</tr>
+			{/foreach}
+		{/ifset}
+		</tbody>
+	</table>
+</div>

@@ -3,10 +3,10 @@ namespace Core;
 
 class Config {
 
-	const VERSION = "3.0.1";
+	const VERSION = "0.0.1";
 
 	const PROJECT_DIR = BASEDIR."../";
-	const VENDOR_DIR  = BASEDIR."vendor/";
+	const STATIC_DIR = APPDIR."static/";
 
 	private static $data = [];
 

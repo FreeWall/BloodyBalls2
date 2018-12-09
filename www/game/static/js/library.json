@@ -1,0 +1,23 @@
+[
+  "utils/strings.js",
+  "utils/validators.js",
+  "utils/controls.js",
+  "utils/modalbox.js",
+
+  "application/network/socketclient.js",
+  "application/network/socketserver.js",
+
+  "application/game/gameclient.js",
+  "application/game/gameserver.js",
+  "application/game/renderer.js",
+  "application/game/physics.js",
+  "application/game/game.js",
+
+  "application/views/login.js",
+  "application/views/roomlist.js",
+  "application/view.js",
+
+  "application/session.js",
+  "application/core.js",
+  "application/connector.js"
+]
