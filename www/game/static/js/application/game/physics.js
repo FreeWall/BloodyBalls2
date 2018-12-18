@@ -32,12 +32,12 @@ var Physics = function(){
 
 	this.add = function(object){
 		this.objects[object.getId()] = object;
-		this.world.addBody(object.getPhysicsBody());
+		this.world.addBody(object.getPhysicsObject());
 	};
 
 	this.remove = function(object){
 		delete this.objects[object.getId()];
-		this.world.removeBody(object.getPhysicsBody());
+		this.world.removeBody(object.getPhysicsObject());
 	};
 
 	this.getWorld = function(){

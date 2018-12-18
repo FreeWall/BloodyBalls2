@@ -9,12 +9,14 @@ class UserPresenter extends BasePresenter {
 
 	public function render(){
 		if($this->getAction() == "init"){
+			usleep(300*1000);
 			$user = UserRepository::getUser($this->getRequest()->getParam("id"));
 			if($user) $user->remove();
 			$user = UserRepository::createUser($this->getRequest()->getHttpRequest()->getPost("host"),$this->getRequest()->getHttpRequest()->getPost("name"));
 			$this->setResponse(new JsonResponse([
 				"id" => $user->getId(),
-				"name" => $user->getName()
+				"name" => $user->getName(),
+				"country" => strtolower($user->getCountry()),
 			]));
 			return;
 		}

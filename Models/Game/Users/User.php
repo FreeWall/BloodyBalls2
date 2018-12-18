@@ -6,7 +6,7 @@ use Models\Database\BaseEntity;
 
 class User extends BaseEntity {
 
-	const EXPIRE_TIMEOUT = 10;
+	const EXPIRE_TIMEOUT = 20;
 
 	protected function load(array $data = null):?array {
 		return ($data != null ? $data : Database::fetch("SELECT * FROM users WHERE user_id = ?",$this->getId()));
@@ -22,6 +22,10 @@ class User extends BaseEntity {
 
 	public function getIp():string {
 		return $this->data['user_ip'];
+	}
+
+	public function getCountry():string {
+		return $this->data['user_country'];
 	}
 
 	public function getCoordLat():float {

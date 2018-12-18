@@ -74,13 +74,16 @@ var ModalBox = function(_options){
 	};
 
 	this.hide = function(){
-		this.opened = false;
-		$("body").toggleClass("modalbox-blured",false);
-		$(this.content).toggleClass("show",false).toggleClass("smooth",false);
+		if(this.opened){
+			this.opened = false;
+			$("body").toggleClass("modalbox-blured",false);
+			$(this.content).toggleClass("show",false).toggleClass("smooth",false);
+		}
 		return this;
 	};
 
 	this.loading = function(loading){
+		$("div.headloader",this.content).toggleClass("show",loading);
 		$("div.foot div.loader",this.content).toggleClass("show",loading);
 	};
 

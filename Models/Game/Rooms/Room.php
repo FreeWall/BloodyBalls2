@@ -40,6 +40,14 @@ class Room extends BaseEntity {
 		return $this->data['room_maxplayers'];
 	}
 
+	public function getCreated():int {
+		return $this->data['room_created'];
+	}
+
+	public function getCountry():string {
+		return $this->getUser()->getCountry();
+	}
+
 	public function getDistanceToUser(User $user):int {
 		return $this->getUser()->getDistanceToUser($user);
 	}

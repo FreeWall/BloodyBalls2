@@ -31,7 +31,8 @@ class RoomPresenter extends BasePresenter {
 					"password"   => !empty($room->getPassword()),
 					"players"    => $room->getPlayers(),
 					"maxplayers" => $room->getMaxPlayers(),
-					"distance"   => $room->getDistanceToUser($user)
+					"country"    => $room->getCountry(),
+					"distance"   => $room->getDistanceToUser($user),
 				];
 			}
 
@@ -41,6 +42,7 @@ class RoomPresenter extends BasePresenter {
 				$users[$user->getId()] = [
 					"id"         => $user->getId(),
 					"name"       => $user->getName(),
+					"country"    => $user->getCountry(),
 					"distance"   => $user->getDistanceToUser($user)
 				];
 			}
@@ -69,7 +71,8 @@ class RoomPresenter extends BasePresenter {
 				$room = RoomRepository::createRoom($user,$host,$name,$password,$maxplayers);
 				$this->setResponse(new JsonResponse([
 					"id" => $room->getId(),
-					"name" => $room->getName()
+					"host" => $room->getHost(),
+					"name" => $room->getName(),
 				]));
 				return;
 			}
@@ -84,7 +87,8 @@ class RoomPresenter extends BasePresenter {
 				if(empty($room->getPassword()) || Passwords::verify($password,$room->getPassword())){
 					$this->setResponse(new JsonResponse([
 						"id" => $room->getId(),
-						"host" => $room->getHost()
+						"host" => $room->getHost(),
+						"name" => $room->getName(),
 					]));
 					return;
 				}

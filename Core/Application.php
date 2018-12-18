@@ -29,6 +29,7 @@ abstract class Application {
 		self::$type = $type;
 		try {
 			Config::load();
+			Debugger::enable(Config::get("environment")['production'] ? Debugger::PRODUCTION : Debugger::DEVELOPMENT);
 			self::getSession()->start();
 			RoutesFactory::createRoutes();
 			$this->minifyJS();

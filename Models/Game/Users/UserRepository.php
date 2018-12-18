@@ -3,6 +3,7 @@ namespace Models\Game\Users;
 
 use Core\Application;
 use Core\Database;
+use Core\Utils\LocationUtil;
 use Models\Database\BaseRepository;
 
 class UserRepository {
@@ -45,10 +46,14 @@ class UserRepository {
 
 	public static function createUser(string $host,string $name):User {
 		$coords = ['lat' => 0,'lon' => 0];//LocationUtil::getCoords();
+		$country = "cz";//LocationUtil::getCountryCode();
+		$coords = LocationUtil::getCoords();
+		$country = LocationUtil::getCountryCode();
 		Database::query("INSERT INTO users",[
 			"user_host"      => $host,
 			"user_name"      => $name,
 			"user_ip"        => Application::getHttpRequest()->getRemoteAddress(),
+			"user_country"   => $country,
 			"user_coord_lat" => $coords['lat'],
 			"user_coord_lon" => $coords['lon'],
 			"user_lastping"  => time()

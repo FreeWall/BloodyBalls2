@@ -18,7 +18,7 @@ var SocketClient = function(){
 	};
 
 	this.open = function(id){
-		this.server = this.peer.connect(id,{id:Session.id});
+		this.server = this.peer.connect(id,{metadata:Session.toObject()});
 		this.server.on("open",function(){
 			_this.onOpenCallback();
 		});
@@ -26,7 +26,7 @@ var SocketClient = function(){
 			_this.onClosedCallback();
 		});
 		this.server.on("data",function(data){
-			_this.onDataCallback(data);
+			_this.onDataCallback(data.channel,data.data);
 		});
 	};
 
@@ -37,7 +37,8 @@ var SocketClient = function(){
 		}
 	};
 
-	this.send = function(data){
+	this.send = function(channel,data){
+		data = {channel:channel,data:data};
 		this.server.send(data);
 	};
 
@@ -51,7 +52,7 @@ var SocketClient = function(){
 		_this.onClosedCallback = callback;
 	};
 
-	this.onDataCallback = function(data){};
+	this.onDataCallback = function(channel,data){};
 	this.onData = function(callback){
 		_this.onDataCallback = callback;
 	};
@@ -61,7 +62,7 @@ var SocketClient = function(){
 		_this.onErrorCallback = callback;
 	};
 
-	window.onunload = window.onbeforeunload = function(e){
+	window.onunload = window.onbeforeunload = function(){
 		if(!!_this.peer && !_this.peer.destroyed){
 			_this.peer.destroy();
 		}

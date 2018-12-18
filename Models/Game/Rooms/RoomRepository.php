@@ -37,7 +37,7 @@ class RoomRepository {
 			radians('".$user->getCoordLon()."') ) + 
 			sin( radians('".$user->getCoordLat()."') ) * 
 			sin( radians( user_coord_lat ) ) ) ) 
-			AS distance FROM rooms INNER JOIN users USING(user_id) WHERE user_lastping >= '".(time()-User::EXPIRE_TIMEOUT)."' ORDER BY distance ASC");
+			AS distance FROM rooms INNER JOIN users USING(user_id) WHERE user_lastping >= '".(time()-User::EXPIRE_TIMEOUT)."' ORDER BY distance ASC,room_created DESC");
 		foreach($data AS $values){
 			$entities[] = self::getRoom($values['room_id'],$values);
 		}
@@ -51,7 +51,8 @@ class RoomRepository {
 			"room_name"       => $name,
 			"room_password"   => (!empty($password) ? Passwords::hash($password) : ""),
 			"room_players"    => 1,
-			"room_maxplayers" => $maxplayers
+			"room_maxplayers" => $maxplayers,
+			"room_created"    => time()
 		]);
 		return self::getRoom(Database::getInsertId());
 	}

@@ -24,7 +24,7 @@
 			{foreach $users AS $user}
 			<tr data-id="{$user[id]}">
 				<td>{$user[name]}</td>
-				<td class="right">{$user[distance]} km</td>
+				<td class="right"><div class="flag flag-{$user[country]|lower}"></div><span class="va-middle">{$user[distance]} km</span></td>
 			</tr>
 			{/foreach}
 		{/ifset}

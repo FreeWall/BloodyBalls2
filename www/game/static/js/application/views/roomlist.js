@@ -7,30 +7,72 @@ RoomList.update = function(){
 	if(!RoomList.updating){
 		RoomList.updating = true;
 		$("[data-view=rooms] div.loader").toggleClass("show",true);
+		$("#refresh-rooms-button").toggleClass("disabled",true);
 		Core.api("room",{action:"rooms-users"},function(data){
 			$("[data-js=rooms]").html(data['rooms']);
 			$("[data-js=users]").html(data['users']);
 			$("[data-view=rooms] div.loader").toggleClass("show",false);
+			$("#refresh-rooms-button").toggleClass("disabled",false);
 			RoomList.updating = false;
 		});
 	}
 };
 
-RoomList.join = function(){
+RoomList.join = function(connectBox,connectErrorBox){
 	if(RoomList.selectedId != 0){
-		Connector.join(RoomList.selectedId);
+		connectBox.show();
+		connectBox.loading(true);
+		$(".rows div.row",connectBox.getContent()).html("&nbsp;");
+		$(".rows div.row:first-child",connectBox.getContent()).text("Connecting to server ...");
+		Core.api("room",{action:"connect",id:RoomList.selectedId},function(data){
+			$(".rows div.row:last-child",connectBox.getContent()).text("Connecting to host ...");
+			Game.client.join(data['host'],function(){
+				connectBox.hide();
+				Game.join(data);
+			},function(){
+				connectBox.hide();
+				connectErrorBox.show();
+			});
+		});
 	}
 };
 
 RoomList.create = function(name,password,maxplayers,callback){
-	Core.server.create(function(id){
-		Core.api("room",{action:"create",host:id,name:name,password:password,maxplayers:maxplayers},function(){
-			callback();
+	Game.server.create(function(id){
+		Core.api("room",{action:"create",host:id,name:name,password:password,maxplayers:maxplayers},function(data){
+			Game.client.join(data['host'],function(){
+				callback(data);
+			});
 		});
 	});
 };
 
 $(function(){
+	var connectBox = new ModalBox({
+		title: "Connecting",
+		width: 250,
+		close: false
+	});
+	connectBox.setClose(false);
+	connectBox.setBody($("[data-modal=connecting]").contents());
+	$("div.box",connectBox.getContent()).append("<div class='headloader loader'></div>");
+
+	var connectErrorBox = new ModalBox({
+		title: "Error",
+		width: 250,
+	});
+	connectErrorBox.setBody($("[data-modal=connecting-error]").contents());
+
+	var newbox = new ModalBox({
+		title: "Create room",
+		width: 300,
+		buttons: [{
+			name: "Create",
+			color: "red",
+			form: "#create-room-form"
+		}]
+	});
+	newbox.setBody($("[data-modal=create-room]").contents());
 
 	$(document).on("click","[data-js=rooms] tr[data-id]",function(){
 		$(this).toggleClass("selected",true);
@@ -38,7 +80,7 @@ $(function(){
 	});
 
 	$(document).on("dblclick","[data-js=rooms] tr[data-id]",function(){
-		RoomList.join();
+		$("#join-room-button").trigger("click");
 	});
 
 	$("html").click(function(){
@@ -56,39 +98,30 @@ $(function(){
 
 	$("#join-room-button").click(function(){
 		event.stopPropagation();
-		RoomList.join();
+		RoomList.join(connectBox,connectErrorBox);
 	});
-
-	var newbox = new ModalBox({
-		title: "Create room",
-		width: 300,
-		buttons: [{
-			name: "Create",
-			color: "red",
-			form: "#create-room-form"
-		}]
-	});
-	newbox.setBody($("[data-modal=create-room]").contents());
 
 	$("#create-room-button").click(function(){
 		newbox.show();
+		$("input#room-name").val(Session.getName()+"'s room");
 	});
 
 	$("#create-room-form:not(.creating)").submit(function(){
 		$(this).toggleClass("creating",true);
-		var name = $("input#name").val();
-		var password = $("input#password").val();
-		var maxplayers = Number($("select#maxplayers").val());
+		var name = $("input#room-name").val();
+		var password = $("input#room-password").val();
+		var maxplayers = Number($("select#room-maxplayers").val());
 		if(Validators.isEmpty(name)){
-			$("input#name").toggleClass("error",true);
+			$("input#room-name").toggleClass("error",true);
 			return false;
 		}
 		newbox.setClose(false);
 		newbox.loading(true);
 		$("#create-room-form input, #create-room-form select").prop("disabled",true);
 		$("div.button",newbox.getContent()).toggleClass("disabled",true);
-		RoomList.create(name,password,maxplayers,function(){
+		RoomList.create(name,password,maxplayers,function(data){
 			newbox.hide();
+			Game.join(data,true);
 		});
 		return false;
 	});
@@ -100,5 +133,9 @@ $(function(){
 				RoomList.update();
 			}
 		}
+	});
+
+	$("#refresh-rooms-button").click(function(){
+		RoomList.update();
 	});
 });
