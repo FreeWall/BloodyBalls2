@@ -18,6 +18,7 @@ var GameClient = function(){
 	};
 
 	this.leave = function(){
+		console.log("GameClient close");
 		this.socket.close();
 	};
 
@@ -42,6 +43,11 @@ var GameClient = function(){
 
 	this.socket.onData(function(channel,data){
 		if(channel == Channel.PLAYERS){
+			for(let i in Game.players.getPlayers()){
+				if(typeof data[i] === 'undefined'){
+					Game.players.remove(Game.players.get(i));
+				}
+			}
 			for(let i in data){
 				if(Game.players.exists(data[i].id)){
 					Game.players.get(data[i].id).fromData(data[i]);
@@ -49,7 +55,10 @@ var GameClient = function(){
 					Game.players.add(Player.fromData(data[i]));
 				}
 			}
-			Lobby.updatePlayers(true);
+			Lobby.updatePlayers();
+		}
+		else if(channel == Channel.PLAYERS_REMOVE){
+
 		}
 		else if(channel == Channel.PING){
 			_this.socket.send(Channel.PING,data);

@@ -136,11 +136,14 @@ $(function(){
 		return false;
 	});
 
-	$(document).on("keydown",function (event){
+	$(document).on("keydown",function(event){
 		if(Core.view == View.ROOMS){
 			if((event.which || event.keyCode) == 116){
 				event.preventDefault();
 				RoomList.update();
+			}
+			else if((event.which || event.keyCode) == 13){
+				$("[data-js=rooms] tr[data-id].selected").trigger("dblclick");
 			}
 		}
 	});

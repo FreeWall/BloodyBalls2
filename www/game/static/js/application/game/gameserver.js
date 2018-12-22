@@ -34,6 +34,9 @@ var GameServer = function(){
 
 	this.socket.onClosed(function(peer){
 		Events.dispatch("peerDisconnected",peer);
+		let player = _this.players.getByPeer(peer);
+		_this.players.remove(player);
+		_this.socket.sendToAll(Channel.PLAYERS_REMOVE,player.toObject());
 	});
 
 	this.socket.onError(function(error){

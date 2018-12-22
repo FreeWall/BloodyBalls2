@@ -3,7 +3,8 @@ var Channel = {};
 Channel.PING = 1;
 
 Channel.PLAYERS = 2;
-Channel.SETTINGS = 3;
+Channel.PLAYERS_REMOVE = 3;
+Channel.SETTINGS = 4;
 
 Channel.REQUEST_MOVE_PLAYER = 10;
 Channel.REQUEST_SETTINGS = 11;

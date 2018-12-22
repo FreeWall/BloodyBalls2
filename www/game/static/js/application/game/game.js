@@ -40,7 +40,10 @@ Game.join = function(data,host){
 
 Game.leave = function(){
 	Game.client.leave();
-	//if(Session.isHost()) Game.server.destroy();
+	if(Game.server != null){
+		Game.server.terminate();
+		Game.serverSocket.destroy();
+	}
 };
 
 Game.setView = function(view){

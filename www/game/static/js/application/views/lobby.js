@@ -1,6 +1,11 @@
 var Lobby = {};
 
 Lobby.updatePlayers = function(){
+	$(".lobby div.player").each(function(){
+		if(!Game.players.exists($(this).attr("data-id"))){
+			$(this).remove();
+		}
+	});
 	for(let i in Game.players.getPlayers()){
 		let player = Game.players.getPlayers()[i];
 		let element = $("div.player[data-id="+player.getId()+"]");
@@ -115,5 +120,22 @@ $(function(){
 
 	$("#leave-room-button").click(function(){
 		leaveBox.show();
+	});
+
+	var linkBox = new ModalBox({
+		title: "Room link",
+		width: 350
+	});
+
+	$("#link-room-button").click(function(){
+		linkBox.setBody("<span class='label'>Share this link to invite people</span><input type='text' value='"+location.href+"share/"+Game.client.socket.host+"' readonly style='width:100%'/>");
+		linkBox.show();
+		$("input",linkBox.getContent()).select();
+		$("input",linkBox.getContent()).click(function(){
+			$(this).select();
+		});
+		$("input",linkBox.getContent()).on("copy",function(){
+			$("span",linkBox.getContent()).html("Share this link to invite people (copied)");
+		});
 	});
 });

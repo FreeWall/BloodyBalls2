@@ -13,6 +13,7 @@ Session.init = function(data){
 	this.id = data.id;
 	this.name = data.name;
 	this.country = data.country;
+	window.sessionStorage.setItem("game-userid",this.id);
 	window.localStorage.setItem("game-nickname",this.name);
 };
 
@@ -35,6 +36,10 @@ Session.isHost = function(){
 
 Session.isAdmin = function(){
 	return this.admin;
+};
+
+Session.restoreId = function(){
+	return (window.sessionStorage.getItem("game-userid") ? window.sessionStorage.getItem("game-userid") : null);
 };
 
 Session.restoreName = function(){

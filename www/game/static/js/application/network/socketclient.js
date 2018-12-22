@@ -5,6 +5,7 @@ var SocketClient = function(){
 	this.id     = null;
 	this.peer   = null;
 	this.server = null;
+	this.host   = null;
 
 	this.init = function(callback){
 		this.peer = new Peer({host:'46.28.107.69'});
@@ -18,6 +19,7 @@ var SocketClient = function(){
 	};
 
 	this.open = function(id){
+		this.host = id;
 		this.server = this.peer.connect(id,{metadata:Session.toObject()});
 		this.server.on("open",function(){
 			_this.onOpenCallback();

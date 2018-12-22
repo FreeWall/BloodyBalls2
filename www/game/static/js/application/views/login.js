@@ -13,7 +13,7 @@ LoginView.init = function(callback){
 					LoginView.initialized = true;
 					$(this).prop("disabled",true);
 					$(this).next("div.loader").toggleClass("show",true);
-					Core.api("user",{action:"init",host:Game.client.socket.id,name:name},function(data){
+					Core.api("user",{action:"init",id:Session.restoreId(),host:Game.client.socket.id,name:name},function(data){
 						Session.init(data);
 						if(callback && typeof(callback) === "function") callback(data);
 					});

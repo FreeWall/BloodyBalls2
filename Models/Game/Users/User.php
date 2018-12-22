@@ -58,4 +58,8 @@ class User extends BaseEntity {
 	public function update(){
 		Database::query("UPDATE users SET user_lastping = ? WHERE user_id = ?",time(),$this->getId());
 	}
+
+	public function remove(){
+		Database::query("DELETE FROM users WHERE user_id = ?",$this->getId());
+	}
 }
