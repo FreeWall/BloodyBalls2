@@ -5,6 +5,7 @@ Session.name = null;
 Session.country = null;
 
 Session.host = false;
+Session.admin = false;
 
 Session.keyboard = new Keyboard();
 
@@ -30,6 +31,10 @@ Session.isNameValid = function(name){
 
 Session.isHost = function(){
 	return this.host;
+};
+
+Session.isAdmin = function(){
+	return this.admin;
 };
 
 Session.restoreName = function(){

@@ -27,55 +27,55 @@ Strings.numberFormat = function(number,decimals,dec_point,thousands_sep){
 };
 
 Strings.levenstein = function(s1, s2, costIns, costRep, costDel) {
-	costIns = costIns == null ? 1 : +costIns
-	costRep = costRep == null ? 1 : +costRep
-	costDel = costDel == null ? 1 : +costDel
+	costIns = costIns == null ? 1 : +costIns;
+	costRep = costRep == null ? 1 : +costRep;
+	costDel = costDel == null ? 1 : +costDel;
 	if (s1 === s2) {
 		return 0
 	}
-	var l1 = s1.length
-	var l2 = s2.length
+	var l1 = s1.length;
+	var l2 = s2.length;
 	if (l1 === 0) {
-		return l2 * costIns
+		return l2 * costIns;
 	}
 	if (l2 === 0) {
-		return l1 * costDel
+		return l1 * costDel;
 	}
-	var split = false
+	var split = false;
 	try {
 		split = !('0')[0]
 	} catch (e) {
 		split = true
 	}
 	if (split) {
-		s1 = s1.split('')
-		s2 = s2.split('')
+		s1 = s1.split('');
+		s2 = s2.split('');
 	}
-	var p1 = new Array(l2 + 1)
-	var p2 = new Array(l2 + 1)
-	var i1, i2, c0, c1, c2, tmp
+	var p1 = new Array(l2 + 1);
+	var p2 = new Array(l2 + 1);
+	var i1, i2, c0, c1, c2, tmp;
 	for (i2 = 0; i2 <= l2; i2++) {
 		p1[i2] = i2 * costIns
 	}
 	for (i1 = 0; i1 < l1; i1++) {
-		p2[0] = p1[0] + costDel
+		p2[0] = p1[0] + costDel;
 		for (i2 = 0; i2 < l2; i2++) {
-			c0 = p1[i2] + ((s1[i1] === s2[i2]) ? 0 : costRep)
-			c1 = p1[i2 + 1] + costDel
+			c0 = p1[i2] + ((s1[i1] === s2[i2]) ? 0 : costRep);
+			c1 = p1[i2 + 1] + costDel;
 			if (c1 < c0) {
-				c0 = c1
+				c0 = c1;
 			}
-			c2 = p2[i2] + costIns
+			c2 = p2[i2] + costIns;
 			if (c2 < c0) {
 				c0 = c2
 			}
 			p2[i2 + 1] = c0
 		}
-		tmp = p1
-		p1 = p2
-		p2 = tmp
+		tmp = p1;
+		p1 = p2;
+		p2 = tmp;
 	}
-	c0 = p1[l2]
+	c0 = p1[l2];
 	return c0
 };
 
@@ -266,98 +266,3 @@ for (var i=0; i < Strings.defaultDiacriticsRemovalMap .length; i++){
 		Strings.diacriticsMap[letters[j]] = Strings.defaultDiacriticsRemovalMap [i].base;
 	}
 }
-
-Strings.base64_keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
-Strings.base64_encode = function(input){
-	var utf8_encode = function(string){
-		string = string.replace(/\r\n/g, "\n");
-		var utftext = "";
-		for(var n = 0; n < string.length; n++){
-			var c = string.charCodeAt(n);
-			if(c < 128){
-				utftext += String.fromCharCode(c);
-			}
-			else if((c > 127) && (c < 2048)){
-				utftext += String.fromCharCode((c >> 6) | 192);
-				utftext += String.fromCharCode((c & 63) | 128);
-			}
-			else {
-				utftext += String.fromCharCode((c >> 12) | 224);
-				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-				utftext += String.fromCharCode((c & 63) | 128);
-			}
-		}
-		return utftext;
-	};
-	var output = "";
-	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-	var i = 0;
-	input = utf8_encode(input);
-	while(i < input.length){
-		chr1 = input.charCodeAt(i++);
-		chr2 = input.charCodeAt(i++);
-		chr3 = input.charCodeAt(i++);
-		enc1 = chr1 >> 2;
-		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-		enc4 = chr3 & 63;
-		if(isNaN(chr2)){
-			enc3 = enc4 = 64;
-		} else if(isNaN(chr3)){
-			enc4 = 64;
-		}
-		output = output + this.base64_keyStr.charAt(enc1) + this.base64_keyStr.charAt(enc2) + this.base64_keyStr.charAt(enc3) + this.base64_keyStr.charAt(enc4);
-	}
-	return output;
-};
-
-Strings.base64_decode = function(input){
-	var utf8_decode = function(){
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
-		while(i < utftext.length){
-			c = utftext.charCodeAt(i);
-			if(c < 128){
-				string += String.fromCharCode(c);
-				i++;
-			}
-			else if((c > 191) && (c < 224)){
-				c2 = utftext.charCodeAt(i + 1);
-				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-				i += 2;
-			}
-			else {
-				c2 = utftext.charCodeAt(i + 1);
-				c3 = utftext.charCodeAt(i + 2);
-				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-				i += 3;
-			}
-		}
-		return string;
-	};
-	var output = "";
-	var chr1, chr2, chr3;
-	var enc1, enc2, enc3, enc4;
-	var i = 0;
-	input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-	while(i < input.length){
-		enc1 = this.base64_keyStr.indexOf(input.charAt(i++));
-		enc2 = this.base64_keyStr.indexOf(input.charAt(i++));
-		enc3 = this.base64_keyStr.indexOf(input.charAt(i++));
-		enc4 = this.base64_keyStr.indexOf(input.charAt(i++));
-		chr1 = (enc1 << 2) | (enc2 >> 4);
-		chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-		chr3 = ((enc3 & 3) << 6) | enc4;
-		output = output + String.fromCharCode(chr1);
-		if(enc3 != 64){
-			output = output + String.fromCharCode(chr2);
-		}
-		if(enc4 != 64){
-			output = output + String.fromCharCode(chr3);
-		}
-	}
-	output = utf8_decode(output);
-	return output;
-};

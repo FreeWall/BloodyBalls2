@@ -4,8 +4,6 @@ namespace Core;
 use Core\Components\Component;
 use Core\Http\RequestFactory;
 use Core\Http\Session;
-use Core\Less\Less;
-use Core\Minify\Minify;
 use Core\Presenters\Presenter;
 use Core\Router\Router;
 use Core\Router\Routes\NullRoute;
@@ -32,7 +30,6 @@ abstract class Application {
 			Debugger::enable(Config::get("environment")['production'] ? Debugger::PRODUCTION : Debugger::DEVELOPMENT);
 			self::getSession()->start();
 			RoutesFactory::createRoutes();
-			$this->minifyJS();
 		} catch(\Exception $e){
 			if(Debugger::isEnabled()) Debugger::exceptionHandler($e);
 			$this->runErrorPresenter();
@@ -132,29 +129,6 @@ abstract class Application {
 		$className = "Apps\\".self::getAppName()."\\Components\\".$name."Control";
 		if(class_exists($className)) return new $className($args);
 		else throw new \Exception("Component '".$name."' not found.");
-	}
-
-	public function loadStyles(){
-		$less = new Less(Config::STATIC_DIR."css/styles.less",Config::STATIC_DIR."css//styles.css");
-		$less->setLastModified(filemtime(Config::STATIC_DIR."css/styles.less"));
-		try {
-			$less->parse();
-		} catch(\Exception $e){
-			if(Debugger::isEnabled()) Debugger::exceptionHandler($e);
-			$this->runErrorPresenter();
-		}
-	}
-
-	public function minifyJS(){
-		$files = json_decode(file_get_contents(Config::STATIC_DIR."js/library.json"),true);
-		foreach($files AS $idx => $file) $files[$idx] = Config::STATIC_DIR."js/".$file;
-		$minify = new Minify(Config::STATIC_DIR."js/library.min.js",$files);
-		try {
-			$minify->parse();
-		} catch(\Exception $e){
-			if(Debugger::isEnabled()) Debugger::exceptionHandler($e);
-			$this->runErrorPresenter();
-		}
 	}
 
 	public function getGlobalParams(){

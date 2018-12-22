@@ -14,6 +14,9 @@ RoomList.update = function(){
 			$("[data-view=rooms] div.loader").toggleClass("show",false);
 			$("#refresh-rooms-button").toggleClass("disabled",false);
 			RoomList.updating = false;
+			if(RoomList.selectedId != 0){
+				$("[data-js=rooms] tr[data-id="+RoomList.selectedId+"]").trigger("click");
+			}
 		});
 	}
 };
@@ -24,21 +27,26 @@ RoomList.join = function(connectBox,connectErrorBox){
 		connectBox.loading(true);
 		$(".rows div.row",connectBox.getContent()).html("&nbsp;");
 		$(".rows div.row:first-child",connectBox.getContent()).text("Connecting to server ...");
-		Core.api("room",{action:"connect",id:RoomList.selectedId},function(data){
-			$(".rows div.row:last-child",connectBox.getContent()).text("Connecting to host ...");
-			Game.client.join(data['host'],function(){
-				connectBox.hide();
-				Game.join(data);
-			},function(){
+		Core.api("room",{action:"join",id:RoomList.selectedId},function(data){
+			if(data){
+				$(".rows div.row:last-child",connectBox.getContent()).text("Connecting to host ...");
+				Game.client.join(data['host'],function(){
+					connectBox.hide();
+					Game.join(data);
+				},function(){
+					connectBox.hide();
+					connectErrorBox.show();
+				});
+			} else {
 				connectBox.hide();
 				connectErrorBox.show();
-			});
+			}
 		});
 	}
 };
 
 RoomList.create = function(name,password,maxplayers,callback){
-	Game.server.create(function(id){
+	Game.createServer(function(id){
 		Core.api("room",{action:"create",host:id,name:name,password:password,maxplayers:maxplayers},function(data){
 			Game.client.join(data['host'],function(){
 				callback(data);
@@ -120,7 +128,9 @@ $(function(){
 		$("#create-room-form input, #create-room-form select").prop("disabled",true);
 		$("div.button",newbox.getContent()).toggleClass("disabled",true);
 		RoomList.create(name,password,maxplayers,function(data){
+			newbox.setClose(true);
 			newbox.hide();
+			$("#create-room-form input, #create-room-form select").prop("disabled",false);
 			Game.join(data,true);
 		});
 		return false;

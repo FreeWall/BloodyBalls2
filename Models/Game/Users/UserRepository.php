@@ -29,6 +29,7 @@ class UserRepository {
 
 	/** @return User[] */
 	public static function getNearestUsers(User $user){
+		self::removeOldUsers();
 		$entities = [];
 		$data = Database::query("SELECT *,
 			( 3959 * acos( cos( radians('".$user->getCoordLat()."') ) * 
@@ -45,8 +46,6 @@ class UserRepository {
 	}
 
 	public static function createUser(string $host,string $name):User {
-		$coords = ['lat' => 0,'lon' => 0];//LocationUtil::getCoords();
-		$country = "cz";//LocationUtil::getCountryCode();
 		$coords = LocationUtil::getCoords();
 		$country = LocationUtil::getCountryCode();
 		Database::query("INSERT INTO users",[
@@ -59,5 +58,9 @@ class UserRepository {
 			"user_lastping"  => time()
 		]);
 		return self::getUser(Database::getInsertId());
+	}
+
+	public static function removeOldUsers(){
+		Database::query("DELETE FROM users WHERE user_lastping < '".(time()-User::EXPIRE_TIMEOUT)."'");
 	}
 }

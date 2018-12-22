@@ -31,69 +31,89 @@ Lobby.draggable = {
 	refreshPositions: true,
 	zIndex: 10,
 	start: function(event,ui){
-		if(!Session.isHost()) event.preventDefault();
+		if(!Session.isAdmin()) event.preventDefault();
 	}
 };
 
 Lobby.droppable = {
 	tolerance: "pointer",
 	drop: function(event,ui){
-		if(Session.isHost()){
+		if(Session.isAdmin()){
 			let target = $(event.target);
 			let team = Team.fromId(target.closest("[data-team]").attr("data-team"));
 			let player = Game.players.get($(ui.draggable).attr("data-id"));
 			if(player.team != team){
-				player.team = team;
 				$(ui.draggable).appendTo(this);
-				Game.server.sendPlayers();
+				Game.client.movePlayerRequest(player,team);
 			}
 		}
 	}
 };
 
-Events.listen("settingsChanged",function(args){
+Lobby.updateSettings = function(){
 	$("#game-map").val(Game.settings.map);
 	$("#game-mode").val(Game.settings.mode.id);
 	$("#game-timelimit").val(Game.settings.time);
-	$("#game-scorelimit").val(Game.settings.score);
+	$("[data-scorelimit="+Game.settings.mode.id+"]").val(Game.settings.score);
 	$("div[data-gamemode]").attr("data-gamemode",Game.settings.mode.id);
-	if(Session.isHost()) Game.server.sendSettings();
-});
+	if(Session.isAdmin()){
+		$("#game-map").prop("disabled",false);
+		$("#game-mode").prop("disabled",false);
+		$("#game-timelimit").prop("disabled",false);
+		$("[data-scorelimit]").prop("disabled",false);
+	}
+};
 
 $(function(){
 	$("#game-map").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.started || !Session.isHost()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.settings.setMap($(this).val());
-		Events.dispatch("settingsChanged",{type:Settings.MAP});
+		Game.client.settingsRequest(Settings.MAP,$(this).val());
 	});
 
 	$("#game-mode").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.started || !Session.isHost()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.settings.setMode($(this).val());
-		Events.dispatch("settingsChanged",{type:Settings.MODE});
+		Game.client.settingsRequest(Settings.MODE,$(this).val());
 	});
 
 	$("#game-timelimit").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.started || !Session.isHost()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.settings.setTime($(this).val());
-		Events.dispatch("settingsChanged",{type:Settings.TIME});
+		Game.client.settingsRequest(Settings.TIME,$(this).val());
 	});
 
 	$("[data-scorelimit]").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.started || !Session.isHost()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.settings.setScore($(this).val());
-		Events.dispatch("settingsChanged",{type:Settings.SCORE});
+		Game.client.settingsRequest(Settings.SCORE,$(this).val());
+	});
+
+	var leaveBox = new ModalBox({
+		title: "Leave room?",
+		width: 300,
+		buttons: [{
+			name: "Leave",
+			color: "red"
+		}]
+	});
+	leaveBox.setBody("Are you sure you want to leave the room?");
+	leaveBox.onSubmit(function(){
+		leaveBox.hide();
+		Game.leave();
+		Core.setView(View.ROOMS);
+		RoomList.update();
+	});
+
+	$("#leave-room-button").click(function(){
+		leaveBox.show();
 	});
 });

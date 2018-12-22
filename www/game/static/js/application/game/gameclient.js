@@ -17,6 +17,18 @@ var GameClient = function(){
 		this.socket.open(id);
 	};
 
+	this.leave = function(){
+		this.socket.close();
+	};
+
+	this.movePlayerRequest = function(player,team){
+		this.socket.send(Channel.REQUEST_MOVE_PLAYER,{id:player.getId(),team:team.id});
+	};
+
+	this.settingsRequest = function(type,value){
+		this.socket.send(Channel.REQUEST_SETTINGS,{type:type,value:value});
+	};
+
 	this.socket.onOpened(function(){
 		_this.joinCallback();
 	});
@@ -44,7 +56,7 @@ var GameClient = function(){
 		}
 		else if(channel == Channel.SETTINGS){
 			Game.settings = Settings.fromData(data);
-			Events.dispatch("settingsChanged");
+			Lobby.updateSettings();
 		}
 	});
 };

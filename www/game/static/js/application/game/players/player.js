@@ -1,15 +1,16 @@
 var Player = function(id,name,country,peer){
 
-	const OBJECT_SIZE = 22;
-
 	let _this = this;
-	this.id = id || ++Game.IDS;
+	this.id = id;
 	this.name = name || null;
 	this.country = country || null;
 	this.team = Team.SPEC;
 
 	this.peer = peer || null;
 	this.ping = 0;
+
+	this.host = false;
+	this.admin = false;
 
 	this.keyboard = new Keyboard();
 
@@ -40,6 +41,14 @@ var Player = function(id,name,country,peer){
 		return this.ping;
 	};
 
+	this.isHost = function(){
+		return this.host;
+	};
+
+	this.isAdmin = function(){
+		return this.admin;
+	};
+
 	this.getPhysicsObject = function(){
 		if(this.physicsObject == null){
 			this.physicsObject = new p2.Body({
@@ -47,7 +56,7 @@ var Player = function(id,name,country,peer){
 				damping:0.1,
 				fixedRotation:true,
 			});
-			let shape = new p2.Circle(OBJECT_SIZE/2);
+			let shape = new p2.Circle(22/2);
 			shape.material = Game.physics.materials.player;
 			this.physicsObject.addShape(shape);
 		}
@@ -56,7 +65,6 @@ var Player = function(id,name,country,peer){
 
 	this.getRenderObject = function(){
 		if(this.renderObject == null){
-
 		}
 		return this.renderObject;
 	};
@@ -70,7 +78,14 @@ var Player = function(id,name,country,peer){
 	};
 
 	this.toObject = function(){
-		return {id:this.id,name:this.name,team:this.team.id,ping:this.ping,country:this.country};
+		return {
+			id:this.id,
+			name:this.name,
+			team:this.team.id,
+			ping:this.ping,
+			country:this.country,
+			admin:this.admin
+		};
 	};
 
 	this.fromData = function(data){
@@ -79,6 +94,7 @@ var Player = function(id,name,country,peer){
 		this.team = Team.fromId(data.team);
 		this.ping = data.ping;
 		this.country = data.country;
+		this.admin = data.admin;
 	};
 };
 

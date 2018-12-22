@@ -9,7 +9,7 @@ class Session {
 	/** @var bool  has been session ID regenerated? */
 	private $regenerated = false;
 
-	/** @var bool  has been session started? */
+	/** @var bool  has been session running? */
 	private static $started = false;
 
 	/** @var array default configuration */
@@ -118,7 +118,7 @@ class Session {
 
 
 	/**
-	 * Has been session started?
+	 * Has been session running?
 	 */
 	public function isStarted():bool{
 		return self::$started;
@@ -142,7 +142,7 @@ class Session {
 	 */
 	public function destroy():void{
 		if(!self::$started){
-			throw new Nette\InvalidStateException('Session is not started.');
+			throw new Nette\InvalidStateException('Session is not running.');
 		}
 
 		session_destroy();
@@ -173,7 +173,7 @@ class Session {
 		}
 		if(self::$started){
 			if(headers_sent($file,$line)){
-				throw new Nette\InvalidStateException('Cannot regenerate session ID after HTTP headers have been sent'.($file ? " (output started at $file:$line)." : '.'));
+				throw new Nette\InvalidStateException('Cannot regenerate session ID after HTTP headers have been sent'.($file ? " (output running at $file:$line)." : '.'));
 			}
 			if(session_status() === PHP_SESSION_ACTIVE){
 				session_regenerate_id(true);
@@ -343,7 +343,7 @@ class Session {
 
 			} else {
 				if(session_status() === PHP_SESSION_ACTIVE){
-					throw new Nette\InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been started".(self::$started ? '.' : ' by session.auto_start or session_start().'));
+					throw new Nette\InvalidStateException("Unable to set 'session.$key' to value '$value' when session has been running".(self::$started ? '.' : ' by session.auto_start or session_start().'));
 				}
 				if(isset($special[$key])){
 					$key = "session_$key";
@@ -442,7 +442,7 @@ class Session {
 	 */
 	public function setHandler(\SessionHandlerInterface $handler){
 		if(self::$started){
-			throw new Nette\InvalidStateException('Unable to set handler when session has been started.');
+			throw new Nette\InvalidStateException('Unable to set handler when session has been running.');
 		}
 		$this->handler = $handler;
 		return $this;

@@ -29,6 +29,7 @@ class RoomRepository {
 
 	/** @return Room[] */
 	public static function getNearestRooms(User $user){
+		self::removeOldRooms();
 		$entities = [];
 		$data = Database::query("SELECT *,
 			( 3959 * acos( cos( radians('".$user->getCoordLat()."') ) * 
@@ -55,5 +56,9 @@ class RoomRepository {
 			"room_created"    => time()
 		]);
 		return self::getRoom(Database::getInsertId());
+	}
+
+	public static function removeOldRooms(){
+		Database::query("DELETE rooms FROM rooms INNER JOIN users USING(user_id) WHERE user_lastping < '".(time()-User::EXPIRE_TIMEOUT)."'");
 	}
 }

@@ -4,7 +4,7 @@ var SocketServer = function(){
 
 	this.id     = null;
 	this.peer   = null;
-	this.peers  = [];
+	this.peers  = {};
 
 	this.init = function(callback){
 		this.peer = new Peer({host:'46.28.107.69'});
@@ -15,21 +15,19 @@ var SocketServer = function(){
 		this.peer.on("connection",function(socket){
 			_this.peers[socket.peer] = socket;
 			socket.on("open",function(){
-				_this.onOpenCallback(socket.peer,socket.metadata);
+				_this.onOpened(socket.peer,socket.metadata);
 			});
 			socket.on("close",function(){
 				delete _this.peers[socket.peer];
-				_this.onClosedCallback(socket.peer);
+				_this.onClosed(socket.peer);
 			});
 			socket.on("data",function(data){
-				_this.onDataCallback(socket.peer,data.channel,data.data);
+				_this.onData(socket.peer,data.channel,data.data);
 			});
 			socket.on("error",function(){
 				delete _this.peers[socket.peer];
+				_this.onError(socket.peer);
 			});
-		});
-		this.peer.on("error",function(error){
-			_this.onErrorCallback(error);
 		});
 	};
 
@@ -45,28 +43,20 @@ var SocketServer = function(){
 		this.peers[peer].send(data);
 	};
 
-	this.sendToAll = function(channel,data){
-		for(let i in this.peers) this.send(i,channel,data);
+	this.onOpened = function(peer,metadata){
+		Game.server.postMessage({channel:Channel.BRIDGE_OPENED,data:{peer:peer,metadata:metadata}});
 	};
 
-	this.onOpenCallback = function(peer,data){};
-	this.onOpened = function(callback){
-		_this.onOpenCallback = callback;
+	this.onClosed = function(peer){
+		Game.server.postMessage({channel:Channel.BRIDGE_CLOSED,data:{peer:peer}});
 	};
 
-	this.onClosedCallback = function(){};
-	this.onClosed = function(callback){
-		_this.onClosedCallback = callback;
+	this.onData = function(peer,channel,data){
+		Game.server.postMessage({channel:Channel.BRIDGE_DATA,data:{peer:peer,channel:channel,data:data}});
 	};
 
-	this.onDataCallback = function(peer,channel,data){};
-	this.onData = function(callback){
-		_this.onDataCallback = callback;
-	};
-
-	this.onErrorCallback = function(error){};
-	this.onError = function(callback){
-		_this.onErrorCallback = callback;
+	this.onError = function(peer){
+		Game.server.postMessage({channel:Channel.BRIDGE_ERROR,data:{peer:peer}});
 	};
 
 	window.onunload = window.onbeforeunload = function(){

@@ -78,7 +78,7 @@ class RoomPresenter extends BasePresenter {
 			}
 			$this->setResponse(new VoidResponse());
 		}
-		else if($this->getAction() == "connect"){
+		else if($this->getAction() == "join"){
 			usleep(500*1000);
 			$id = $this->getRequest()->getHttpRequest()->getPost("id");
 			$password = $this->getRequest()->getHttpRequest()->getPost("password");

@@ -1,5 +1,6 @@
 {layout @layout.latte}
 {block content}
+<div id="stats"></div>
 <div data-view="error">
 	<div class="errorbox default-box">
 		<div class="error">
@@ -64,11 +65,6 @@
 				<option value="6">6</option>
 				<option value="8">8</option>
 				<option value="10" selected>10</option>
-				<option value="12">12</option>
-				<option value="14">14</option>
-				<option value="16">16</option>
-				<option value="18">18</option>
-				<option value="20">20</option>
 			</select>
 		</div>
 		</form>
@@ -122,8 +118,8 @@
 			<div class="column">
 				<div class="form-row">
 					<span class="label">Arena</span>
-					<select id="game-map">
-						<option value="classic">Classic</option>
+					<select id="game-map" disabled>
+						<option value="classic" data-default>Classic</option>
 						<option value="deeprock">Deeprock</option>
 						<option value="silverfort">Silverfort</option>
 						<option value="westpine">Westpine</option>
@@ -136,8 +132,8 @@
 				</div>
 				<div class="form-row">
 					<span class="label">Game mode</span>
-					<select id="game-mode">
-						<option value="tdm">Team Deathmatch</option>
+					<select id="game-mode" disabled>
+						<option value="tdm" data-default>Team Deathmatch</option>
 						<option value="ctf">Capture the Flag</option>
 						<option value="dm">Deathmatch</option>
 					</select>
@@ -146,36 +142,36 @@
 			<div class="column" data-gamemode="tdm">
 				<div class="form-row">
 					<span class="label">Time limit</span>
-					<select id="game-timelimit">
+					<select id="game-timelimit" disabled>
 						<option value="0">unlimited</option>
 						<option value="1">1 minute</option>
 						<option value="2">2 minutes</option>
-						<option value="3" selected>3 minutes</option>
+						<option value="3" data-default>3 minutes</option>
 						<option value="5">5 minutes</option>
 						<option value="10">10 minutes</option>
 					</select>
 				</div>
 				<div class="form-row">
 					<span class="label">Winning score</span>
-					<select data-scorelimit="tdm">
+					<select data-scorelimit="tdm" disabled>
 						<option value="0">unlimited</option>
 						<option value="25">25 kills</option>
-						<option value="50" selected>50 kills</option>
+						<option value="50">50 kills</option>
 						<option value="100">100 kills</option>
 						<option value="150">150 kills</option>
 						<option value="200">200 kills</option>
 					</select>
-					<select data-scorelimit="ctf">
+					<select data-scorelimit="ctf" disabled>
 						<option value="0">unlimited</option>
 						<option value="1">1 flag</option>
 						<option value="2">2 flags</option>
-						<option value="3" selected>3 flags</option>
+						<option value="3">3 flags</option>
 						<option value="5">5 flags</option>
 					</select>
-					<select data-scorelimit="dm">
+					<select data-scorelimit="dm" disabled>
 						<option value="0">unlimited</option>
 						<option value="10">10 kills</option>
-						<option value="20" selected>20 kills</option>
+						<option value="20">20 kills</option>
 						<option value="30">30 kills</option>
 						<option value="50">50 kills</option>
 					</select>

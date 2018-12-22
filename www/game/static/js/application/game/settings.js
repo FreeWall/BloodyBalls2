@@ -1,8 +1,8 @@
 var Settings = function(){
 
-	this.map = null;
+	this.map = "classic";
 	this.mode = GameMode.TDM;
-	this.time = 0;
+	this.time = 3;
 	this.score = 0;
 
 	this.setMap = function(map){
@@ -22,7 +22,12 @@ var Settings = function(){
 	};
 
 	this.toObject = function(){
-		return {map:this.map,mode:this.mode.id,time:this.time,score:this.score};
+		return {
+			map:this.map,
+			mode:this.mode.id,
+			time:this.time,
+			score:this.score
+		};
 	};
 
 	this.fromData = function(data){

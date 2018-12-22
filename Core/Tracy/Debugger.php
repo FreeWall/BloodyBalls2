@@ -227,7 +227,7 @@ class Debugger
 		} elseif (headers_sent($file, $line) || ob_get_length()) {
 			throw new \LogicException(
 				__METHOD__ . '() called after some output has been sent. '
-				. ($file ? "Output started at $file:$line." : 'Try Tracy\OutputDebugger to find where output started.')
+				. ($file ? "Output running at $file:$line." : 'Try Tracy\OutputDebugger to find where output running.')
 			);
 
 		} elseif (self::$enabled && session_status() !== PHP_SESSION_ACTIVE) {

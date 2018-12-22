@@ -9,7 +9,7 @@ class Passwords {
 		return password_hash($password,self::ALGO,$options);
 	}
 
-	public static function verify(string $password,string $hash):bool {
+	public static function verify(?string $password,string $hash):bool {
 		return password_verify($password,$hash);
 	}
 

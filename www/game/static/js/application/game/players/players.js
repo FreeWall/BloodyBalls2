@@ -2,11 +2,21 @@ var Players = function(){
 
 	let _this = this;
 
+	this.IDS = 0;
 	this.players = {};
 	this.idsByPeer = {};
 
 	this.getPlayers = function(){
 		return this.players;
+	};
+
+	this.create = function(name,country,peer){
+		let player = new Player(++this.IDS,name,country,peer);
+		if(this.length() == 0){
+			player.host = true;
+			player.admin = true;
+		}
+		this.add(player);
 	};
 
 	this.get = function(id){
@@ -33,6 +43,10 @@ var Players = function(){
 
 	this.clear = function(){
 		this.players = {};
+	};
+
+	this.length = function(){
+		return Object.keys(this.players).length;
 	};
 
 	this.toObject = function(){

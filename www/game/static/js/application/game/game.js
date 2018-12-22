@@ -4,24 +4,22 @@ Game.IDS = 0;
 
 Game.id = null;
 Game.view = null;
-Game.started = false;
+Game.running = false;
 Game.paused = false;
 
 Game.client = new GameClient();
-Game.server = new GameServer();
-Game.settings = new Settings();
+Game.server = null;
+Game.serverSocket = new SocketServer();
 
 Game.stats = new Stats();
 Game.physics = new Physics();
 Game.renderer = new Renderer();
 
 Game.players = new Players();
+Game.settings = new Settings();
 
 Game.init = function(){
-	Game.stats.domElement.style.position = 'absolute';
-	Game.stats.domElement.style.left = '10px';
-	Game.stats.domElement.style.top = '10px';
-	document.body.appendChild(Game.stats.dom);
+	$("#stats").html(Game.stats.dom);
 
 	Game.physics.init();
 	Game.renderer.init();
@@ -31,11 +29,18 @@ Game.init = function(){
 
 Game.join = function(data,host){
 	host = host || false;
+	Game.reset();
 	Game.id = data.id;
 	Session.host = host;
+	Session.admin = host;
 	$("[data-js=lobby-title]").text(data.name);
 	Core.setView(View.GAME);
 	Game.setView(View.GAME_LOBBY);
+};
+
+Game.leave = function(){
+	Game.client.leave();
+	//if(Session.isHost()) Game.server.destroy();
 };
 
 Game.setView = function(view){
@@ -58,4 +63,29 @@ Game.tick = function(){
 		Game.stats.end();
 	}
 	window.requestAnimationFrame(Game.tick);
+};
+
+Game.reset = function(){
+	Game.running = false;
+	Game.paused = false;
+	Game.players = new Players();
+	Game.settings = new Settings();
+};
+
+Game.createServer = function(callback){
+	Game.serverSocket.init(function(id){
+		Game.server = new Worker("/static/js/server.min.js");
+		Game.server.onmessage = function(event){
+			if(event.data.channel == Channel.SERVER_INIT){
+				callback(id);
+			}
+			else if(event.data.channel == Channel.BRIDGE_INIT){
+
+			}
+			else if(event.data.channel == Channel.BRIDGE_DATA){
+				let data = event.data.data;
+				Game.serverSocket.send(data.peer,data.channel,data.data);
+			}
+		};
+	});
 };

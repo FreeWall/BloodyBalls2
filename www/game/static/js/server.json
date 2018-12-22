@@ -1,0 +1,23 @@
+[
+  "utils/events.js",
+  "utils/strings.js",
+  "utils/validators.js",
+  "utils/keyboard.js",
+
+  "application/network/channel.js",
+  "application/network/socketserverbridge.js",
+
+  "application/game/maps/map.js",
+  "application/game/players/player.js",
+  "application/game/players/players.js",
+  "application/game/bullets/bullet.js",
+  "application/game/walls/wall.js",
+  "application/game/team.js",
+  "application/game/mode.js",
+  "application/game/settings.js",
+
+  "application/game/gameserver.js",
+  "application/game/physics.js",
+
+  "application/server.js"
+]
