@@ -21,6 +21,7 @@ class Loader {
 	}
 
 	public function loadClass($className){
+		//echo "<br>";print_r($className);
 		$fileName = "";
 		if(false !== ($lastNsPos = strripos($className,self::NAMESPACE_SEPARATOR))){
 			$namespace = substr($className,0,$lastNsPos);

@@ -35,6 +35,7 @@ Lobby.draggable = {
 	revertDuration: 0,
 	refreshPositions: true,
 	zIndex: 10,
+	helper: "clone",
 	start: function(event,ui){
 		if(!Session.isAdmin()) event.preventDefault();
 	}
@@ -61,17 +62,22 @@ Lobby.updateSettings = function(){
 	$("#game-timelimit").val(Game.settings.time);
 	$("[data-scorelimit="+Game.settings.mode.id+"]").val(Game.settings.score);
 	$("div[data-gamemode]").attr("data-gamemode",Game.settings.mode.id);
-	if(Session.isAdmin()){
+	if(Session.isAdmin() && Game.state == State.LOBBY){
 		$("#game-map").prop("disabled",false);
 		$("#game-mode").prop("disabled",false);
 		$("#game-timelimit").prop("disabled",false);
 		$("[data-scorelimit]").prop("disabled",false);
+	} else {
+		$("#game-map").prop("disabled",true);
+		$("#game-mode").prop("disabled",true);
+		$("#game-timelimit").prop("disabled",true);
+		$("[data-scorelimit]").prop("disabled",true);
 	}
 };
 
 $(function(){
 	$("#game-map").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
@@ -79,7 +85,7 @@ $(function(){
 	});
 
 	$("#game-mode").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
@@ -87,7 +93,7 @@ $(function(){
 	});
 
 	$("#game-timelimit").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
@@ -95,13 +101,13 @@ $(function(){
 	});
 
 	$("[data-scorelimit]").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.running || !Session.isAdmin()){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
 		Game.client.settingsRequest(Settings.SCORE,$(this).val());
 	});
-
+	//--------------------------------------------------------------------------
 	var leaveBox = new ModalBox({
 		title: "Leave room?",
 		width: 300,
@@ -121,7 +127,7 @@ $(function(){
 	$("#leave-room-button").click(function(){
 		leaveBox.show();
 	});
-
+	//--------------------------------------------------------------------------
 	var linkBox = new ModalBox({
 		title: "Room link",
 		width: 350
@@ -138,4 +144,58 @@ $(function(){
 			$("span",linkBox.getContent()).html("Share this link to invite people (copied)");
 		});
 	});
+	//--------------------------------------------------------------------------
+	$("#play-button").click(function(){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || !Session.isAdmin()){
+			return;
+		}
+		Game.client.stateRequest(State.GAME);
+	});
+
+	$("#stop-button").click(function(){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || !Session.isAdmin()){
+			return;
+		}
+		Game.client.stateRequest(State.LOBBY);
+	});
+
+	$("#pause-button").click(function(){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state != State.GAME || !Session.isAdmin()){
+			return;
+		}
+		Game.client.pauseRequest(true);
+	});
+
+	$("#resume-button").click(function(){
+		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state != State.GAME || !Session.isAdmin()){
+			return;
+		}
+		Game.client.pauseRequest(false);
+	});
+
+	Events.listen(Events.STATE_CHANGE,function(state){
+		if(state == State.LOBBY){
+			$("#play-button").show();
+			$("#stop-button").hide();
+			$("#pause-button").hide();
+			$("#resume-button").hide();
+		}
+		else if(state == State.GAME){
+			$("#play-button").hide();
+			$("#stop-button").show();
+			$("#pause-button").show();
+		}
+		Lobby.updateSettings();
+	});
+
+	Events.listen(Events.PAUSE_CHANGE,function(paused){
+		if(paused){
+			$("#pause-button").hide();
+			$("#resume-button").show();
+		} else {
+			$("#pause-button").show();
+			$("#resume-button").hide();
+		}
+	});
+	//--------------------------------------------------------------------------
 });

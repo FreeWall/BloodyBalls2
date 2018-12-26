@@ -28,6 +28,7 @@ abstract class Application {
 		try {
 			Config::load();
 			Debugger::enable(Config::get("environment")['production'] ? Debugger::PRODUCTION : Debugger::DEVELOPMENT);
+			Debugger::$showBar = false;
 			self::getSession()->start();
 			RoutesFactory::createRoutes();
 		} catch(\Exception $e){
@@ -74,7 +75,7 @@ abstract class Application {
 	}
 
 	public static function getAppName():string {
-		return strtolower(self::$type);
+		return self::$type;
 	}
 
 	public function run(){

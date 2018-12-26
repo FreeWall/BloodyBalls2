@@ -11,7 +11,7 @@ var Players = function(){
 	};
 
 	this.create = function(name,country,peer){
-		let player = new Player(++this.IDS,name,country,peer);
+		let player = new Player(++this.IDS,Strings.escape(name),country,peer);
 		if(this.length() == 0){
 			player.host = true;
 			player.admin = true;

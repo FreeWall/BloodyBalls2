@@ -18,9 +18,9 @@ var SocketClient = function(){
 		});
 	};
 
-	this.open = function(id){
+	this.open = function(id,password){
 		this.host = id;
-		this.server = this.peer.connect(id,{metadata:Session.toObject()});
+		this.server = this.peer.connect(id,{metadata:{session:Session.toObject(),password:password}});
 		this.server.on("open",function(){
 			_this.onOpenCallback();
 		});
@@ -40,6 +40,7 @@ var SocketClient = function(){
 	};
 
 	this.send = function(channel,data){
+		data = data || null;
 		data = {channel:channel,data:data};
 		this.server.send(data);
 	};

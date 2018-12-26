@@ -6,7 +6,12 @@ var SocketServer = function(){
 	this.peer   = null;
 	this.peers  = {};
 
-	this.init = function(callback){
+	this.password = null;
+	this.maxplayers = null;
+
+	this.init = function(password,maxplayers,callback){
+		this.password = password;
+		this.maxplayers = maxplayers;
 		this.peer = new Peer({host:'46.28.107.69'});
 		this.peer.on("open",function(id){
 			_this.id = id;
@@ -15,18 +20,29 @@ var SocketServer = function(){
 		this.peer.on("connection",function(socket){
 			_this.peers[socket.peer] = socket;
 			socket.on("open",function(){
-				_this.onOpened(socket.peer,socket.metadata);
+				if(_this.password != null && _this.password.length > 0){
+					if(socket.metadata.password !== _this.password){
+						delete _this.peers[socket.peer];
+						socket.close();
+						return;
+					}
+				}
+				_this.onOpened(socket.peer,socket.metadata.session);
 			});
 			socket.on("close",function(){
-				delete _this.peers[socket.peer];
-				_this.onClosed(socket.peer);
+				if(typeof _this.peers[socket.peer] !== 'undefined'){
+					delete _this.peers[socket.peer];
+					_this.onClosed(socket.peer);
+				}
 			});
 			socket.on("data",function(data){
 				_this.onData(socket.peer,data.channel,data.data);
 			});
 			socket.on("error",function(){
-				delete _this.peers[socket.peer];
-				_this.onError(socket.peer);
+				if(typeof _this.peers[socket.peer] !== 'undefined'){
+					delete _this.peers[socket.peer];
+					_this.onError(socket.peer);
+				}
 			});
 		});
 	};
@@ -39,6 +55,7 @@ var SocketServer = function(){
 	};
 
 	this.send = function(peer,channel,data){
+		data = data || null;
 		data = {channel:channel,data:data};
 		this.peers[peer].send(data);
 	};

@@ -25,7 +25,7 @@
 		<tbody>
 		{ifset $rooms}
 			{foreach $rooms AS $room}
-				<tr data-id="{$room[id]}">
+				<tr data-id="{$room[id]}" {if $room[password]}data-password="true"{/if}>
 					<td>{if $room[password]}<i class="fa fa-lock"></i>{/if}<span class="va-middle">{$room[name]}</span></td>
 					<td>{$room[players]}/{$room[maxplayers]}</td>
 					<td class="right"><div class="flag flag-{$room[country]|lower}"></div><span class="va-middle">{$room[distance]} km</span></td>

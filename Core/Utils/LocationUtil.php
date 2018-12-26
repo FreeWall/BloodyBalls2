@@ -1,17 +1,18 @@
 <?php
 namespace Core\Utils;
 
+use Core\Application;
 use Core\Config;
 use Core\Database;
 
 class LocationUtil {
 
-	const CACHE_TIMEOUT = 3600;
+	const CACHE_TIMEOUT = 86400;
 
 	private static $data = [];
 
 	private static function getData(string $ip = null){
-		if($ip === null) $ip = "212.79.110.106";//Application::getHttpRequest()->getRemoteAddress();//TODO
+		if($ip === null) $ip = Config::get("environment")['domain'] != "game.localhost" ? Application::getHttpRequest()->getRemoteAddress() : "212.79.110.106";
 		if(!isset(self::$data[$ip])){
 			$data = self::getCachedData($ip);
 			if(!$data || $data['location_updated']+self::CACHE_TIMEOUT < time()){
@@ -41,28 +42,28 @@ class LocationUtil {
 		return $data ?? null;
 	}
 
-	public static function getCity(string $ip = null):?string {
+	public static function getCity(string $ip = null):string {
 		$data = self::getData($ip);
-		return $data['city'];
+		return ($data['city'] ?? "");
 	}
 
-	public static function getRegion(string $ip = null):?string {
+	public static function getRegion(string $ip = null):string {
 		$data = self::getData($ip);
-		return $data['region_name'];
+		return ($data['region_name'] ?? "");
 	}
 
-	public static function getCountry(string $ip = null):?string {
+	public static function getCountry(string $ip = null):string {
 		$data = self::getData($ip);
-		return $data['country_name'];
+		return ($data['country_name'] ?? "");
 	}
 
-	public static function getCountryCode(string $ip = null):?string {
+	public static function getCountryCode(string $ip = null):string {
 		$data = self::getData($ip);
-		return $data['country_code'];
+		return ($data['country_code'] ?? "");
 	}
 
 	public static function getCoords(string $ip = null):array {
 		$data = self::getData($ip);
-		return ['lat' => $data['latitude'],'lon' => $data['longitude']];
+		return ['lat' => ($data['latitude'] ?? 0),'lon' => ($data['longitude'] ?? 0)];
 	}
 }

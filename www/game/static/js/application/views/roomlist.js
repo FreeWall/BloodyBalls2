@@ -1,6 +1,7 @@
 var RoomList = {};
 
 RoomList.selectedId = 0;
+RoomList.connectingId = 0;
 RoomList.updating = false;
 
 RoomList.update = function(){
@@ -21,16 +22,18 @@ RoomList.update = function(){
 	}
 };
 
-RoomList.join = function(connectBox,connectErrorBox){
-	if(RoomList.selectedId != 0){
+RoomList.join = function(connectBox,connectErrorBox,password){
+	if(RoomList.connectingId != 0){
 		connectBox.show();
 		connectBox.loading(true);
 		$(".rows div.row",connectBox.getContent()).html("&nbsp;");
-		$(".rows div.row:first-child",connectBox.getContent()).text("Connecting to server ...");
-		Core.api("room",{action:"join",id:RoomList.selectedId},function(data){
+		$(".rows div.row:nth-child(1)",connectBox.getContent()).text("Connecting to server ...");
+		Core.api("room",{action:"join",id:RoomList.connectingId},function(data){
 			if(data){
-				$(".rows div.row:last-child",connectBox.getContent()).text("Connecting to host ...");
-				Game.client.join(data['host'],function(){
+				$(".rows div.row:nth-child(2)",connectBox.getContent()).text("Connecting to host ...");
+				Game.client.join(data['host'],password,function(){
+					$(".rows div.row:nth-child(3)",connectBox.getContent()).text("Awaiting state ...");
+				},function(){
 					connectBox.hide();
 					Game.join(data);
 				},function(){
@@ -46,9 +49,10 @@ RoomList.join = function(connectBox,connectErrorBox){
 };
 
 RoomList.create = function(name,password,maxplayers,callback){
-	Game.createServer(function(id){
+	Game.createServer(password,maxplayers,function(id){
 		Core.api("room",{action:"create",host:id,name:name,password:password,maxplayers:maxplayers},function(data){
-			Game.client.join(data['host'],function(){
+			Game.client.join(data['host'],password,function(){
+			},function(){
 				callback(data);
 			});
 		});
@@ -65,11 +69,27 @@ $(function(){
 	connectBox.setBody($("[data-modal=connecting]").contents());
 	$("div.box",connectBox.getContent()).append("<div class='headloader loader'></div>");
 
+	var passwordBox = new ModalBox({
+		title: "Enter the password",
+		width: 300,
+		buttons: [{
+			name: "Connect",
+			color: "red",
+			form: "#password-form"
+		}]
+	});
+	passwordBox.setBody($("[data-modal=password]").contents());
+	$("#password-form").submit(function(){
+		passwordBox.hide();
+		RoomList.join(connectBox,connectErrorBox,$("#connect-password").val());
+		return false;
+	});
+
 	var connectErrorBox = new ModalBox({
 		title: "Error",
 		width: 250,
 	});
-	connectErrorBox.setBody($("[data-modal=connecting-error]").contents());
+	connectErrorBox.setBody("Could not connect to host");
 
 	var newbox = new ModalBox({
 		title: "Create room",
@@ -105,8 +125,18 @@ $(function(){
 	});
 
 	$("#join-room-button").click(function(){
-		event.stopPropagation();
-		RoomList.join(connectBox,connectErrorBox);
+		if(RoomList.selectedId != 0){
+			RoomList.connectingId = RoomList.selectedId;
+			RoomList.selectedId = 0;
+			event.stopPropagation();
+			let password = $("[data-js=rooms] tr[data-id="+RoomList.connectingId+"]").is("[data-password]");
+			if(password){
+				$("#connect-password",passwordBox.getContent()).val("");
+				passwordBox.show();
+			} else {
+				RoomList.join(connectBox,connectErrorBox);
+			}
+		}
 	});
 
 	$("#create-room-button").click(function(){
@@ -138,11 +168,11 @@ $(function(){
 
 	$(document).on("keydown",function(event){
 		if(Core.view == View.ROOMS){
-			if((event.which || event.keyCode) == 116){
+			if(event.which == 116){
 				event.preventDefault();
 				RoomList.update();
 			}
-			else if((event.which || event.keyCode) == 13){
+			else if(event.which == 13){
 				$("[data-js=rooms] tr[data-id].selected").trigger("dblclick");
 			}
 		}

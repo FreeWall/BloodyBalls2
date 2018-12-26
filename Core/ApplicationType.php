@@ -3,6 +3,6 @@ namespace Core;
 
 class ApplicationType {
 
-	const GAME = "GAME";
-	const EDITOR = "EDITOR";
+	const GAME = "Game";
+	const EDITOR = "Editor";
 }

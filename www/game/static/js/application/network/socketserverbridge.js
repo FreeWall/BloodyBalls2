@@ -16,6 +16,7 @@ var SocketServerBridge = function(){
 		_this.onOpenedCallback = callback;
 	};
 
+
 	this.onClosedCallback = function(){};
 	this.onClosed = function(callback){
 		_this.onClosedCallback = callback;
@@ -34,7 +35,12 @@ var SocketServerBridge = function(){
 	onmessage = function(event){
 		let channel = event.data.channel;
 		let data = event.data.data;
-		if(channel == Channel.BRIDGE_OPENED){
+		if(channel == Channel.BRIDGE_INIT){
+			Server.gameServer.password = data.password;
+			Server.gameServer.maxplayers = data.maxplayers;
+			postMessage({channel:Channel.BRIDGE_INIT});
+		}
+		else if(channel == Channel.BRIDGE_OPENED){
 			_this.peers[data.peer] = data.peer;
 			_this.onOpenedCallback(data.peer,data.metadata);
 		}

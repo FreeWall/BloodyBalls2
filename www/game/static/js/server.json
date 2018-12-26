@@ -5,6 +5,7 @@
   "utils/keyboard.js",
 
   "application/network/channel.js",
+  "application/network/socketserver.js",
   "application/network/socketserverbridge.js",
 
   "application/game/maps/map.js",
@@ -15,9 +16,12 @@
   "application/game/team.js",
   "application/game/mode.js",
   "application/game/settings.js",
+  "application/game/state.js",
 
   "application/game/gameserver.js",
   "application/game/physics.js",
+
+  "application/views/chat.js",
 
   "application/server.js"
 ]

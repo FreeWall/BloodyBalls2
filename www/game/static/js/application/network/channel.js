@@ -1,15 +1,22 @@
 var Channel = {};
 
-Channel.PING = 1;
+Channel.CONNECT = 1;
+Channel.INIT = 2;
 
-Channel.PLAYERS = 2;
-Channel.PLAYERS_REMOVE = 3;
-Channel.SETTINGS = 4;
+Channel.PING = 3;
 
-Channel.REQUEST_MOVE_PLAYER = 10;
-Channel.REQUEST_SETTINGS = 11;
+Channel.SERVER_PLAYERS = 4;
+Channel.SERVER_PLAYER_REMOVE = 5;
+Channel.SERVER_SETTINGS = 6;
+Channel.SERVER_CHAT = 7;
+Channel.SERVER_STATE = 8;
+Channel.SERVER_PAUSE = 9;
 
-Channel.SERVER_INIT = 50;
+Channel.CLIENT_MOVE_PLAYER = 30;
+Channel.CLIENT_SETTINGS = 31;
+Channel.CLIENT_MESSAGE = 32;
+Channel.CLIENT_STATE = 33;
+Channel.CLIENT_PAUSE = 34;
 
 Channel.BRIDGE_INIT = 60;
 Channel.BRIDGE_OPENED = 61;

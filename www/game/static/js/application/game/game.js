@@ -4,7 +4,7 @@ Game.IDS = 0;
 
 Game.id = null;
 Game.view = null;
-Game.running = false;
+Game.state = State.LOBBY;
 Game.paused = false;
 
 Game.client = new GameClient();
@@ -54,12 +54,8 @@ Game.setView = function(view){
 	}
 };
 
-Game.pause = function(paused){
-	Game.paused = paused;
-};
-
 Game.tick = function(){
-	if(!Game.paused){
+	if(Game.state == State.GAME && !Game.paused){
 		Game.stats.begin();
 		Game.physics.tick();
 		Game.renderer.tick();
@@ -69,26 +65,31 @@ Game.tick = function(){
 };
 
 Game.reset = function(){
-	Game.running = false;
+	Game.state = State.LOBBY;
 	Game.paused = false;
 	Game.players = new Players();
 	Game.settings = new Settings();
+	Chat.reset();
 };
 
-Game.createServer = function(callback){
-	Game.serverSocket.init(function(id){
-		Game.server = new Worker("/static/js/server.min.js");
+Game.createServer = function(password,maxplayers,callback){
+	Game.serverSocket.init(password,maxplayers,function(id){
+		Game.server = new Worker("/static/js/server.min.js?"+Date.now());
 		Game.server.onmessage = function(event){
-			if(event.data.channel == Channel.SERVER_INIT){
+			if(event.data.channel == Channel.BRIDGE_INIT){
 				callback(id);
-			}
-			else if(event.data.channel == Channel.BRIDGE_INIT){
-
 			}
 			else if(event.data.channel == Channel.BRIDGE_DATA){
 				let data = event.data.data;
 				Game.serverSocket.send(data.peer,data.channel,data.data);
 			}
 		};
+		Game.server.postMessage({channel:Channel.BRIDGE_INIT,data:{password:password,maxplayers:maxplayers}});
 	});
 };
+
+Events.listen(Events.STATE_CHANGE,function(state){
+});
+
+Events.listen(Events.PAUSE_CHANGE,function(paused){
+});

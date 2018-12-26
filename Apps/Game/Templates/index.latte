@@ -50,21 +50,26 @@
 		<form id="create-room-form">
 		<input type="submit" style="display:none"/>
 		<div class="form-row">
-			<span class="label">Name:</span>
+			<span class="label">Name</span>
 			<input type="text" id="room-name" maxlength="40" autocomplete="off" autofocus/>
 		</div>
 		<div class="form-row">
-			<span class="label">Password:</span>
+			<span class="label">Password</span>
 			<input type="text" id="room-password" maxlength="255" autocomplete="off"/>
 		</div>
 		<div class="form-row">
-			<span class="label">Max players:</span>
+			<span class="label">Max players</span>
 			<select id="room-maxplayers">
 				<option value="2">2</option>
 				<option value="4">4</option>
 				<option value="6">6</option>
 				<option value="8">8</option>
 				<option value="10" selected>10</option>
+				<option value="12">12</option>
+				<option value="14">14</option>
+				<option value="16">16</option>
+				<option value="18">18</option>
+				<option value="20">20</option>
 			</select>
 		</div>
 		</form>
@@ -74,121 +79,166 @@
 	<div class="rows">
 		<div class="row">&nbsp;</div>
 		<div class="row">&nbsp;</div>
+		<div class="row">&nbsp;</div>
 	</div>
 </div>
-<div data-modal="connecting-error">
-	<div class="rows">
-		<div class="row">Could not connect to host</div>
+<div data-modal="password">
+	<form id="password-form">
+	<input type="submit" style="display:none"/>
+	<div class="form-row">
+		<span class="label">Password</span>
+		<input type="text" id="connect-password" maxlength="255" autocomplete="off" autofocus style="width:100%"/>
 	</div>
+	</form>
 </div>
 <div data-view="game">
-	<div class="game" data-game-view="canvas">
-		<canvas id="game-canvas"></canvas>
-	</div>
-	<div class="lobby default-box" data-game-view="lobby">
-		<div class="head">
-			<div class="title" data-js="lobby-title"></div>
-			<div class="options">
-				<div id="link-room-button" class="button"><i class="fa fa-link"></i><span>Link</span>
-				</div><div id="leave-room-button" class="button"><i class="fa fa-sign-out"></i><span>Leave</span>
+	<div class="header">
+		<div class="wrap-game" data-game-view="canvas">
+			<div class="game">
+				<canvas id="game-canvas"></canvas>
+				<div class="wrap-headscore">
+					<div class="headscore">
+						<div class="team red">
+							<div class="score">17</div>
+						</div>
+						<div class="time">
+							<div id="game-time">01:26</div>
+						</div>
+						<div class="team blue">
+							<div class="score">36</div>
+						</div>
+					</div>
+				</div>
+				<div class="wrap-statusbar">
+					<div class="statusbar">
+						<div class="progress" data-progress="80">
+							<div class="mask full">
+								<div class="fill"></div>
+							</div>
+							<div class="mask half">
+								<div class="fill"></div>
+								<div class="fill fix"></div>
+							</div>
+							<div class="empty"></div>
+							<div class="number">80</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="teams">
-			<div class="column">
-				<div class="team red" data-team="red">
-					<div class="title">Red</div>
-					<div class="list"></div>
+		<div class="wrap-lobby" data-game-view="lobby">
+			<div class="lobby default-box" data-gamemode="tdm">
+				<div class="head">
+					<div class="title" data-js="lobby-title"></div>
+					<div class="options">
+						<div id="link-room-button" class="button"><i class="fa fa-link"></i><span>Link</span>
+						</div><div id="leave-room-button" class="button"><i class="fa fa-sign-out"></i><span>Leave</span>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="column">
-				<div class="team spec" data-team="spec">
-					<div class="title">Spectators</div>
-					<div class="list"></div>
+				<div class="teams">
+					<div class="column red">
+						<div class="team red" data-team="red">
+							<div class="title">Red</div>
+							<div class="list"></div>
+						</div>
+					</div>
+					<div class="column spec">
+						<div class="team spec" data-team="spec">
+							<div class="title">Spectators</div>
+							<div class="list"></div>
+						</div>
+					</div>
+					<div class="column blue">
+						<div class="team blue" data-team="blue">
+							<div class="title">Blue</div>
+							<div class="list"></div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="column">
-				<div class="team blue" data-team="blue">
-					<div class="title">Blue</div>
-					<div class="list"></div>
+				<div class="settings">
+					<div class="column">
+						<div class="form-row">
+							<span class="label">Arena</span>
+							<select id="game-map" disabled>
+								<option value="classic" data-default>Classic</option>
+								<option value="deeprock">Deeprock</option>
+								<option value="silverfort">Silverfort</option>
+								<option value="westpine">Westpine</option>
+								<option value="newbush">Newbush</option>
+								<option value="icepond">Icepond</option>
+								<option value="fairport">Fairport</option>
+								<option value="pryham">Pryham</option>
+								<option value="strongby">Strongby</option>
+							</select>
+						</div>
+						<div class="form-row">
+							<span class="label">Game mode</span>
+							<select id="game-mode" disabled>
+								<option value="tdm" data-default>Team Deathmatch</option>
+								<option value="ctf">Capture the Flag</option>
+								<option value="dm">Deathmatch</option>
+							</select>
+						</div>
+					</div>
+					<div class="column">
+						<div class="form-row">
+							<span class="label">Time limit</span>
+							<select id="game-timelimit" disabled>
+								<option value="0">unlimited</option>
+								<option value="1">1 minute</option>
+								<option value="2">2 minutes</option>
+								<option value="3" data-default>3 minutes</option>
+								<option value="5">5 minutes</option>
+								<option value="10">10 minutes</option>
+							</select>
+						</div>
+						<div class="form-row">
+							<span class="label">Winning score</span>
+							<select data-scorelimit="tdm" disabled>
+								<option value="0">unlimited</option>
+								<option value="25">25 kills</option>
+								<option value="50">50 kills</option>
+								<option value="100">100 kills</option>
+								<option value="150">150 kills</option>
+								<option value="200">200 kills</option>
+							</select>
+							<select data-scorelimit="ctf" disabled>
+								<option value="0">unlimited</option>
+								<option value="1">1 flag</option>
+								<option value="2">2 flags</option>
+								<option value="3">3 flags</option>
+								<option value="5">5 flags</option>
+							</select>
+							<select data-scorelimit="dm" disabled>
+								<option value="0">unlimited</option>
+								<option value="10">10 kills</option>
+								<option value="20">20 kills</option>
+								<option value="30">30 kills</option>
+								<option value="50">50 kills</option>
+							</select>
+						</div>
+					</div>
+					<div class="column"></div>
 				</div>
-			</div>
-		</div>
-		<div class="settings">
-			<div class="column">
-				<div class="form-row">
-					<span class="label">Arena</span>
-					<select id="game-map" disabled>
-						<option value="classic" data-default>Classic</option>
-						<option value="deeprock">Deeprock</option>
-						<option value="silverfort">Silverfort</option>
-						<option value="westpine">Westpine</option>
-						<option value="newbush">Newbush</option>
-						<option value="icepond">Icepond</option>
-						<option value="fairport">Fairport</option>
-						<option value="pryham">Pryham</option>
-						<option value="strongby">Strongby</option>
-					</select>
-				</div>
-				<div class="form-row">
-					<span class="label">Game mode</span>
-					<select id="game-mode" disabled>
-						<option value="tdm" data-default>Team Deathmatch</option>
-						<option value="ctf">Capture the Flag</option>
-						<option value="dm">Deathmatch</option>
-					</select>
-				</div>
-			</div>
-			<div class="column" data-gamemode="tdm">
-				<div class="form-row">
-					<span class="label">Time limit</span>
-					<select id="game-timelimit" disabled>
-						<option value="0">unlimited</option>
-						<option value="1">1 minute</option>
-						<option value="2">2 minutes</option>
-						<option value="3" data-default>3 minutes</option>
-						<option value="5">5 minutes</option>
-						<option value="10">10 minutes</option>
-					</select>
-				</div>
-				<div class="form-row">
-					<span class="label">Winning score</span>
-					<select data-scorelimit="tdm" disabled>
-						<option value="0">unlimited</option>
-						<option value="25">25 kills</option>
-						<option value="50">50 kills</option>
-						<option value="100">100 kills</option>
-						<option value="150">150 kills</option>
-						<option value="200">200 kills</option>
-					</select>
-					<select data-scorelimit="ctf" disabled>
-						<option value="0">unlimited</option>
-						<option value="1">1 flag</option>
-						<option value="2">2 flags</option>
-						<option value="3">3 flags</option>
-						<option value="5">5 flags</option>
-					</select>
-					<select data-scorelimit="dm" disabled>
-						<option value="0">unlimited</option>
-						<option value="10">10 kills</option>
-						<option value="20">20 kills</option>
-						<option value="30">30 kills</option>
-						<option value="50">50 kills</option>
-					</select>
-				</div>
-			</div>
-			<div class="column"></div>
-		</div>
-		<div class="foot">
-			<div class="options">
-				<div id="play-button" class="button green"><i class="fa fa-play"></i><span>Start Game</span>
-				</div><div id="stop-button" class="button red" style="display:none"><i class="fa fa-stop"></i><span>Stop Game</span>
-				</div><div id="pause-button" class="button"><i class="fa fa-pause"></i><span>Pause</span>
+				<div class="foot">
+					<div class="options">
+						<div id="play-button" class="button green"><i class="fa fa-play"></i><span>Start Game</span>
+						</div><div id="stop-button" class="button red" style="display:none"><i class="fa fa-stop"></i><span>Stop Game</span>
+						</div><div id="pause-button" class="button" style="display:none"><i class="fa fa-pause"></i><span>Pause</span>
+						</div><div id="resume-button" class="button" style="display:none"><i class="fa fa-pause"></i><span>Resume</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="footer">
-		footer
+		<div class="chat">
+			<div class="messages" data-js="messages"></div>
+			<div class="input">
+				<input type="text" id="chat-input" maxlength="256" placeholder="Press [ENTER] to send a message"/>
+			</div>
+		</div>
 	</div>
 </div>

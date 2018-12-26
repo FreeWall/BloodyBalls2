@@ -1,10 +1,10 @@
-<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
-<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='cs' lang='cs'>
+<!DOCTYPE html>
+<html lang="cs">
 <head>
 	<meta name='robots' content='noindex,nofollow'/>
 	<meta http-equiv='content-type' content='text/html; charset=utf-8'/>
 	<link rel='shortcut icon' href='/static/images/favicon.png'/>
-	<link rel='stylesheet' href='/static/css/styles.css' media='all' type='text/css'/>
+	<link rel='stylesheet' href='/static/css/styles.css?{=now|date:U}' media='all' type='text/css'/>
 	<link rel='stylesheet' href='/static/css/font-awesome.css' media='all' type='text/css'/>
 	<script type='text/javascript' src='/static/js/vendor/jquery.min.js'></script>
 	<script type='text/javascript' src='/static/js/vendor/jquery-ui.min.js'></script>
@@ -15,7 +15,7 @@
 	<script type='text/javascript' src='/static/js/client.min.js?{=now|date:U}'></script>
 	<title>{ifset title}{include title|stripHtml} | BloodyBalls{else}BloodyBalls{/ifset}</title>
 </head>
-<body>
+<body data-body-view>
 <div class='wrapper'>
 	{include content}
 </div>

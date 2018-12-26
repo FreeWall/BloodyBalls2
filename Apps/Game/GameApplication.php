@@ -17,7 +17,7 @@ class GameApplication extends Application {
 	}
 
 	public function loadStyles(){
-		$less = new Less(Config::STATIC_DIR."css/styles.less",Config::STATIC_DIR."css//styles.css");
+		$less = new Less(Config::STATIC_DIR."css/styles.less",Config::STATIC_DIR."css/styles.css");
 		$less->setLastModified(filemtime(Config::STATIC_DIR."css/styles.less"));
 		try {
 			$less->parse();

@@ -18,6 +18,7 @@ Core.init = function(){
 };
 
 Core.setView = function(view){
+	$("[data-body-view]").attr("data-body-view",view);
 	$("[data-view]").fadeOut(0);
 	$("[data-view="+view+"]").fadeIn((Core.view == view ? 0 : 200));
 	Core.view = view;
@@ -46,5 +47,9 @@ Core.api = function(path,args,callback){
 };
 
 $(function(){
-	Core.init();
+	$("div.wrapper").show();
+	//Core.init();
+
+	Core.setView(View.GAME);
+	Game.setView(View.GAME_CANVAS);
 });

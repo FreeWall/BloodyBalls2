@@ -50,6 +50,11 @@ Keyboard.RIGHT = 68;
 Keyboard.SPACE = 32;
 Keyboard.RELOAD = 82;
 
+Keyboard.ENTER = 13;
+Keyboard.TAB = 9;
+Keyboard.ESCAPE = 27;
+Keyboard.LETTER_T = 84;
+
 Keyboard.fromData = function(data){
 	return new Keyboard(data);
 };

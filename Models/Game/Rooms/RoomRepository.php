@@ -2,7 +2,6 @@
 namespace Models\Game\Rooms;
 
 use Core\Database;
-use Core\Security\Passwords;
 use Models\Database\BaseRepository;
 use Models\Game\Users\User;
 
@@ -38,27 +37,28 @@ class RoomRepository {
 			radians('".$user->getCoordLon()."') ) + 
 			sin( radians('".$user->getCoordLat()."') ) * 
 			sin( radians( user_coord_lat ) ) ) ) 
-			AS distance FROM rooms INNER JOIN users USING(user_id) WHERE user_lastping >= '".(time()-User::EXPIRE_TIMEOUT)."' ORDER BY distance ASC,room_created DESC");
+			AS distance FROM rooms INNER JOIN users USING(user_id) WHERE room_updated >= '".(time()-Room::EXPIRE_TIMEOUT)."' ORDER BY distance ASC,room_created DESC");
 		foreach($data AS $values){
 			$entities[] = self::getRoom($values['room_id'],$values);
 		}
 		return $entities;
 	}
 
-	public static function createRoom(User $user,string $host,string $name,string $password,int $maxplayers):Room {
+	public static function createRoom(User $user,string $host,string $name,bool $password,int $maxplayers):Room {
 		Database::query("INSERT INTO rooms",[
 			"user_id"         => $user->getId(),
 			"room_host"       => $host,
 			"room_name"       => $name,
-			"room_password"   => (!empty($password) ? Passwords::hash($password) : ""),
+			"room_password"   => $password,
 			"room_players"    => 1,
 			"room_maxplayers" => $maxplayers,
-			"room_created"    => time()
+			"room_created"    => time(),
+			"room_updated"    => time(),
 		]);
 		return self::getRoom(Database::getInsertId());
 	}
 
 	public static function removeOldRooms(){
-		Database::query("DELETE rooms FROM rooms INNER JOIN users USING(user_id) WHERE user_lastping < '".(time()-User::EXPIRE_TIMEOUT)."'");
+		Database::query("DELETE FROM rooms WHERE room_updated < '".(time()-Room::EXPIRE_TIMEOUT)."'");
 	}
 }

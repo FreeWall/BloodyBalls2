@@ -6,6 +6,25 @@ Strings.inflect = function(value,inflections){
 	return inflections[2];
 };
 
+Strings.escape = function(value,attribute){
+	const ESC_MAP = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;'
+	};
+	return value.replace(attribute ? /[&<>'"]/g : /[&<>]/g,function(c){
+		return ESC_MAP[c];
+	});
+};
+
+Strings.escapeHtml = function(value){
+	var div = document.createElement('div');
+	div.appendChild(document.createTextNode(value));
+	return div.innerHTML;
+};
+
 Strings.numberFormat = function(number,decimals,dec_point,thousands_sep){
 	number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
 	var n = !isFinite(+number) ? 0 : +number,

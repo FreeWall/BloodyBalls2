@@ -5,6 +5,7 @@
   "utils/controls.js",
   "utils/modalbox.js",
   "utils/keyboard.js",
+  "utils/sounds.js",
 
   "application/network/channel.js",
   "application/network/socketclient.js",
@@ -18,6 +19,7 @@
   "application/game/team.js",
   "application/game/mode.js",
   "application/game/settings.js",
+  "application/game/state.js",
 
   "application/game/gameclient.js",
   "application/game/renderer.js",
@@ -27,6 +29,7 @@
   "application/views/login.js",
   "application/views/roomlist.js",
   "application/views/lobby.js",
+  "application/views/chat.js",
   "application/view.js",
 
   "application/session.js",

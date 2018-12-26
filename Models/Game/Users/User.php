@@ -6,7 +6,7 @@ use Models\Database\BaseEntity;
 
 class User extends BaseEntity {
 
-	const EXPIRE_TIMEOUT = 20;
+	const EXPIRE_TIMEOUT = 30;
 
 	protected function load(array $data = null):?array {
 		return ($data != null ? $data : Database::fetch("SELECT * FROM users WHERE user_id = ?",$this->getId()));
@@ -38,10 +38,6 @@ class User extends BaseEntity {
 
 	public function getLastPing():int {
 		return $this->data['user_lastping'];
-	}
-
-	public function isOnline():bool {
-		return ($this->getLastPing()+self::EXPIRE_TIMEOUT > time());
 	}
 
 	public function getDistanceToUser(User $user):int {

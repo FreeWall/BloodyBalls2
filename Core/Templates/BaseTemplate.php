@@ -15,8 +15,8 @@ class BaseTemplate implements ITemplate {
 		$this->latte = new Engine();
 		$this->file = $file;
 		$this->params = $params;
-		$this->directory = BASEDIR."apps/".Application::getAppName()."/templates/";
-		$this->latte->setTempDirectory(BASEDIR."www/".Application::getAppName()."/cache/");
+		$this->directory = BASEDIR."Apps/".Application::getAppName()."/Templates/";
+		$this->latte->setTempDirectory(BASEDIR."www/".strtolower(Application::getAppName())."/cache/");
 	}
 
 	public function getLatte():Engine {
@@ -49,10 +49,10 @@ class BaseTemplate implements ITemplate {
 	}
 
 	public function render(){
-		$this->latte->render($this->directory.DIRECTORY_SEPARATOR.$this->file,$this->params);
+		$this->latte->render($this->directory.DIRECTORY_SEPARATOR.strtolower($this->file),$this->params);
 	}
 
 	public function renderToString():string {
-		return $this->latte->renderToString($this->directory.DIRECTORY_SEPARATOR.$this->file,$this->params);
+		return $this->latte->renderToString($this->directory.DIRECTORY_SEPARATOR.strtolower($this->file),$this->params);
 	}
 }
