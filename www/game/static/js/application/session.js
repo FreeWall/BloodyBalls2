@@ -52,35 +52,30 @@ Session.toObject = function(){
 
 $(function(){
 	$(document).on("keydown",function(event){
-		switch(event.which){
-			case Keyboard.UP: Session.keyboard.UP = true;
+		for(let i in Session.keyboard.data){
+			if(event.which == i){
+				Session.keyboard.data[i] = true;
 				break;
-			case Keyboard.DOWN: Session.keyboard.DOWN = true;
-				break;
-			case Keyboard.LEFT: Session.keyboard.LEFT = true;
-				break;
-			case Keyboard.RIGHT: Session.keyboard.RIGHT = true;
-				break;
-			case Keyboard.SPACE: Session.keyboard.SPACE = true;
-				break;
-			case Keyboard.RELOAD: Session.keyboard.RELOAD = true;
-				break;
+			}
 		}
 	});
+
 	$(document).on("keyup",function(event){
-		switch(event.which){
-			case Keyboard.UP: Session.keyboard.UP = false;
+		for(let i in Session.keyboard.data){
+			if(event.which == i){
+				Session.keyboard.data[i] = false;
 				break;
-			case Keyboard.DOWN: Session.keyboard.DOWN = false;
-				break;
-			case Keyboard.LEFT: Session.keyboard.LEFT = false;
-				break;
-			case Keyboard.RIGHT: Session.keyboard.RIGHT = false;
-				break;
-			case Keyboard.SPACE: Session.keyboard.SPACE = false;
-				break;
-			case Keyboard.RELOAD: Session.keyboard.RELOAD = false;
-				break;
+			}
 		}
+	});
+
+	$(document).on("mousedown",function(event){
+		if(event.which != 1 && event.which != 2 && event.which != 3) return;
+		Session.keyboard.data[event.which] = true;
+	});
+
+	$(document).on("mouseup",function(event){
+		if(event.which != 1 && event.which != 2 && event.which != 3) return;
+		Session.keyboard.data[event.which] = false;
 	});
 });

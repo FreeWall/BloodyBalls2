@@ -38,12 +38,12 @@ class RoomPresenter extends BasePresenter {
 
 			$users = [];
 			$usersTmp = UserRepository::getNearestUsers($user);
-			foreach($usersTmp AS $user){
-				$users[$user->getId()] = [
-					"id"         => $user->getId(),
-					"name"       => $user->getName(),
-					"country"    => $user->getCountry(),
-					"distance"   => $user->getDistanceToUser($user)
+			foreach($usersTmp AS $user2){
+				$users[$user2->getId()] = [
+					"id"         => $user2->getId(),
+					"name"       => $user2->getName(),
+					"country"    => $user2->getCountry(),
+					"distance"   => $user2->getDistanceToUser($user)
 				];
 			}
 

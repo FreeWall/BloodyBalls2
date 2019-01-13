@@ -14,7 +14,7 @@ Strings.escape = function(value,attribute){
 		'"': '&quot;',
 		"'": '&#39;'
 	};
-	return value.replace(attribute ? /[&<>'"]/g : /[&<>]/g,function(c){
+	return value.replace(attribute ? '/[&<>\'"]/g' : '/[&<>]/g',function(c){
 		return ESC_MAP[c];
 	});
 };

@@ -8,7 +8,14 @@ var SocketClient = function(){
 	this.host   = null;
 
 	this.init = function(callback){
-		this.peer = new Peer({host:'46.28.107.69'});
+		this.peer = new Peer({host:'46.28.107.69','iceServers':[
+				{url:'stun:46.28.107.69:3478'},
+				{
+					url:'turn:46.28.107.69:3478',
+					credential:'test',
+					username:'test'
+				},
+		]});
 		this.peer.on("open",function(id){
 			_this.id = id;
 			if(callback && typeof(callback) === "function") callback();

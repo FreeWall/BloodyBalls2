@@ -30,11 +30,8 @@ body {
 	font-size:13px;
 	line-height:18px;
 	color:#444444;
-	background:url("/static/images/background.png") #444444 0px 0px repeat;
+	background:#383838;
 	overflow:hidden;
-	&[data-body-view=game] {
-		background:#2E2E2E;
-	}
 	&.modalbox-blured div.wrapper {
 		.filter(blur(3px));
 	}
@@ -478,9 +475,48 @@ div.createroombox {
 	box-sizing:border-box;
 	width:100%;
 	height:100%;
-	padding:10px 0px;
 	align-items:center;
 	justify-content:center;
+	background:#2A2A2A;
+	div.wrap-headscore {
+		position:absolute;
+		top:20px;
+		left:0px;
+		width:100%;
+		z-index:3;
+		div.headscore {
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			div.team {
+				display:flex;
+				align-items:center;
+				justify-content:center;
+				width:44px;
+				height:42px;
+				border-radius:4px;
+				&.red {
+					background:desaturate(@colorRed,10%);
+				}
+				&.blue {
+					background:desaturate(@colorBlue,10%);
+				}
+				div.score {
+					color:#FFFFFF;
+					font-size:1.5em;
+					font-weight:800;
+					letter-spacing:1px;
+				}
+			}
+			div.time {
+				color:#FFFFFF;
+				font-size:2em;
+				font-weight:800;
+				letter-spacing:2px;
+				padding:0px 30px;
+			}
+		}
+	}
 	div.game {
 		position:relative;
 		display:flex;
@@ -488,9 +524,8 @@ div.createroombox {
 		align-items:stretch;
 		width:100%;
 		height:100%;
-		max-width:800px;
-		max-height:800px;
-		border:2px dashed #444444;
+		max-width:750px;
+		max-height:750px;
 		canvas {
 			position:absolute;
 			top:0px;
@@ -498,60 +533,46 @@ div.createroombox {
 			width:100%;
 			height:100%;
 			z-index:1;
+			background:url("/static/images/floors/floor5.png");
 		}
-		div.wrap-headscore {
+		div.scope {
 			position:absolute;
-			display:flex;
-			justify-content:center;
 			top:0px;
 			left:0px;
 			width:100%;
+			height:100%;
 			z-index:2;
-			div.headscore {
-				display:flex;
-				align-items:center;
-				justify-content:center;
-				div.team {
-					display:flex;
-					align-items:center;
-					justify-content:center;
-					width:42px;
-					height:42px;
-					border-radius:4px;
-					&.red {
-						background:@colorRed;
-					}
-					&.blue {
-						background:@colorBlue;
-					}
-					div.score {
-						color:#FFFFFF;
-						font-size:1.5em;
-						font-weight:800;
-						letter-spacing:1px;
-					}
-				}
-				div.time {
-					color:#FFFFFF;
-					font-size:2em;
-					font-weight:800;
-					letter-spacing:2px;
-					padding:0px 30px;
-				}
-			}
+			background:url("/static/images/scope.png") 50% 50% no-repeat;
 		}
 		div.wrap-statusbar {
 			position:absolute;
-			display:flex;
-			justify-content:center;
-			bottom:0px;
+			display:table;
+			bottom:20px;
 			left:0px;
 			width:100%;
 			z-index:2;
-			div.statusbar {
-				display:flex;
-				align-items:center;
-				justify-content:center;
+			div.ammo {
+				display:table-cell;
+				vertical-align:bottom;
+				color:#DDDDDD;
+				font-size:2em;
+				font-weight:600;
+				letter-spacing:1px;
+				text-align:right;
+				span:nth-child(2){
+					padding:0px 4px;
+				}
+				span:not(:first-child){
+					color:#888888;
+					font-size:0.75em;
+				}
+				&.low span:first-child {
+					.animation(borderBlink 0.5s infinite);
+				}
+			}
+			div.health {
+				display:table-cell;
+				vertical-align:bottom;
 				div.progress {
 					position:relative;
 					display:flex;
@@ -561,8 +582,8 @@ div.createroombox {
 					height:1em;
 					font-size:6em;
 					div.number {
-						color:#FFFFFF;
-						font-size:0.4em;
+						color:#DDDDDD;
+						font-size:0.35em;
 						font-weight:600;
 						letter-spacing:1px;
 						padding-left:1px;
@@ -600,110 +621,150 @@ div.createroombox {
 						border:4px solid rgba(0,0,0,0.3);
 						z-index:1;
 					}
-					&[data-progress="0"]{ div.mask.full, div.mask div.fill {.transform(rotate(-0deg))} div.mask div.fill.fix {.transform(rotate(-0deg))}}
-					&[data-progress="1"]{ div.mask.full, div.mask div.fill {.transform(rotate(-1.8deg))} div.mask div.fill.fix {.transform(rotate(-3.6deg))}}
-					&[data-progress="2"]{ div.mask.full, div.mask div.fill {.transform(rotate(-3.6deg))} div.mask div.fill.fix {.transform(rotate(-7.2deg))}}
-					&[data-progress="3"]{ div.mask.full, div.mask div.fill {.transform(rotate(-5.4deg))} div.mask div.fill.fix {.transform(rotate(-10.8deg))}}
-					&[data-progress="4"]{ div.mask.full, div.mask div.fill {.transform(rotate(-7.2deg))} div.mask div.fill.fix {.transform(rotate(-14.4deg))}}
-					&[data-progress="5"]{ div.mask.full, div.mask div.fill {.transform(rotate(-9deg))} div.mask div.fill.fix {.transform(rotate(-18deg))}}
-					&[data-progress="6"]{ div.mask.full, div.mask div.fill {.transform(rotate(-10.8deg))} div.mask div.fill.fix {.transform(rotate(-21.6deg))}}
-					&[data-progress="7"]{ div.mask.full, div.mask div.fill {.transform(rotate(-12.6deg))} div.mask div.fill.fix {.transform(rotate(-25.2deg))}}
-					&[data-progress="8"]{ div.mask.full, div.mask div.fill {.transform(rotate(-14.4deg))} div.mask div.fill.fix {.transform(rotate(-28.8deg))}}
-					&[data-progress="9"]{ div.mask.full, div.mask div.fill {.transform(rotate(-16.2deg))} div.mask div.fill.fix {.transform(rotate(-32.4deg))}}
-					&[data-progress="10"]{ div.mask.full, div.mask div.fill {.transform(rotate(-18deg))} div.mask div.fill.fix {.transform(rotate(-36deg))}}
-					&[data-progress="11"]{ div.mask.full, div.mask div.fill {.transform(rotate(-19.8deg))} div.mask div.fill.fix {.transform(rotate(-39.6deg))}}
-					&[data-progress="12"]{ div.mask.full, div.mask div.fill {.transform(rotate(-21.6deg))} div.mask div.fill.fix {.transform(rotate(-43.2deg))}}
-					&[data-progress="13"]{ div.mask.full, div.mask div.fill {.transform(rotate(-23.4deg))} div.mask div.fill.fix {.transform(rotate(-46.8deg))}}
-					&[data-progress="14"]{ div.mask.full, div.mask div.fill {.transform(rotate(-25.2deg))} div.mask div.fill.fix {.transform(rotate(-50.4deg))}}
-					&[data-progress="15"]{ div.mask.full, div.mask div.fill {.transform(rotate(-27deg))} div.mask div.fill.fix {.transform(rotate(-54deg))}}
-					&[data-progress="16"]{ div.mask.full, div.mask div.fill {.transform(rotate(-28.8deg))} div.mask div.fill.fix {.transform(rotate(-57.6deg))}}
-					&[data-progress="17"]{ div.mask.full, div.mask div.fill {.transform(rotate(-30.6deg))} div.mask div.fill.fix {.transform(rotate(-61.2deg))}}
-					&[data-progress="18"]{ div.mask.full, div.mask div.fill {.transform(rotate(-32.4deg))} div.mask div.fill.fix {.transform(rotate(-64.8deg))}}
-					&[data-progress="19"]{ div.mask.full, div.mask div.fill {.transform(rotate(-34.2deg))} div.mask div.fill.fix {.transform(rotate(-68.4deg))}}
-					&[data-progress="20"]{ div.mask.full, div.mask div.fill {.transform(rotate(-36deg))} div.mask div.fill.fix {.transform(rotate(-72deg))}}
-					&[data-progress="21"]{ div.mask.full, div.mask div.fill {.transform(rotate(-37.8deg))} div.mask div.fill.fix {.transform(rotate(-75.6deg))}}
-					&[data-progress="22"]{ div.mask.full, div.mask div.fill {.transform(rotate(-39.6deg))} div.mask div.fill.fix {.transform(rotate(-79.2deg))}}
-					&[data-progress="23"]{ div.mask.full, div.mask div.fill {.transform(rotate(-41.4deg))} div.mask div.fill.fix {.transform(rotate(-82.8deg))}}
-					&[data-progress="24"]{ div.mask.full, div.mask div.fill {.transform(rotate(-43.2deg))} div.mask div.fill.fix {.transform(rotate(-86.4deg))}}
-					&[data-progress="25"]{ div.mask.full, div.mask div.fill {.transform(rotate(-45deg))} div.mask div.fill.fix {.transform(rotate(-90deg))}}
-					&[data-progress="26"]{ div.mask.full, div.mask div.fill {.transform(rotate(-46.8deg))} div.mask div.fill.fix {.transform(rotate(-93.6deg))}}
-					&[data-progress="27"]{ div.mask.full, div.mask div.fill {.transform(rotate(-48.6deg))} div.mask div.fill.fix {.transform(rotate(-97.2deg))}}
-					&[data-progress="28"]{ div.mask.full, div.mask div.fill {.transform(rotate(-50.4deg))} div.mask div.fill.fix {.transform(rotate(-100.8deg))}}
-					&[data-progress="29"]{ div.mask.full, div.mask div.fill {.transform(rotate(-52.2deg))} div.mask div.fill.fix {.transform(rotate(-104.4deg))}}
-					&[data-progress="30"]{ div.mask.full, div.mask div.fill {.transform(rotate(-54deg))} div.mask div.fill.fix {.transform(rotate(-108deg))}}
-					&[data-progress="31"]{ div.mask.full, div.mask div.fill {.transform(rotate(-55.8deg))} div.mask div.fill.fix {.transform(rotate(-111.6deg))}}
-					&[data-progress="32"]{ div.mask.full, div.mask div.fill {.transform(rotate(-57.6deg))} div.mask div.fill.fix {.transform(rotate(-115.2deg))}}
-					&[data-progress="33"]{ div.mask.full, div.mask div.fill {.transform(rotate(-59.4deg))} div.mask div.fill.fix {.transform(rotate(-118.8deg))}}
-					&[data-progress="34"]{ div.mask.full, div.mask div.fill {.transform(rotate(-61.2deg))} div.mask div.fill.fix {.transform(rotate(-122.4deg))}}
-					&[data-progress="35"]{ div.mask.full, div.mask div.fill {.transform(rotate(-63deg))} div.mask div.fill.fix {.transform(rotate(-126deg))}}
-					&[data-progress="36"]{ div.mask.full, div.mask div.fill {.transform(rotate(-64.8deg))} div.mask div.fill.fix {.transform(rotate(-129.6deg))}}
-					&[data-progress="37"]{ div.mask.full, div.mask div.fill {.transform(rotate(-66.6deg))} div.mask div.fill.fix {.transform(rotate(-133.2deg))}}
-					&[data-progress="38"]{ div.mask.full, div.mask div.fill {.transform(rotate(-68.4deg))} div.mask div.fill.fix {.transform(rotate(-136.8deg))}}
-					&[data-progress="39"]{ div.mask.full, div.mask div.fill {.transform(rotate(-70.2deg))} div.mask div.fill.fix {.transform(rotate(-140.4deg))}}
-					&[data-progress="40"]{ div.mask.full, div.mask div.fill {.transform(rotate(-72deg))} div.mask div.fill.fix {.transform(rotate(-144deg))}}
-					&[data-progress="41"]{ div.mask.full, div.mask div.fill {.transform(rotate(-73.8deg))} div.mask div.fill.fix {.transform(rotate(-147.6deg))}}
-					&[data-progress="42"]{ div.mask.full, div.mask div.fill {.transform(rotate(-75.6deg))} div.mask div.fill.fix {.transform(rotate(-151.2deg))}}
-					&[data-progress="43"]{ div.mask.full, div.mask div.fill {.transform(rotate(-77.4deg))} div.mask div.fill.fix {.transform(rotate(-154.8deg))}}
-					&[data-progress="44"]{ div.mask.full, div.mask div.fill {.transform(rotate(-79.2deg))} div.mask div.fill.fix {.transform(rotate(-158.4deg))}}
-					&[data-progress="45"]{ div.mask.full, div.mask div.fill {.transform(rotate(-81deg))} div.mask div.fill.fix {.transform(rotate(-162deg))}}
-					&[data-progress="46"]{ div.mask.full, div.mask div.fill {.transform(rotate(-82.8deg))} div.mask div.fill.fix {.transform(rotate(-165.6deg))}}
-					&[data-progress="47"]{ div.mask.full, div.mask div.fill {.transform(rotate(-84.6deg))} div.mask div.fill.fix {.transform(rotate(-169.2deg))}}
-					&[data-progress="48"]{ div.mask.full, div.mask div.fill {.transform(rotate(-86.4deg))} div.mask div.fill.fix {.transform(rotate(-172.8deg))}}
-					&[data-progress="49"]{ div.mask.full, div.mask div.fill {.transform(rotate(-88.2deg))} div.mask div.fill.fix {.transform(rotate(-176.4deg))}}
-					&[data-progress="50"]{ div.mask.full, div.mask div.fill {.transform(rotate(-90deg))} div.mask div.fill.fix {.transform(rotate(-180deg))}}
-					&[data-progress="51"]{ div.mask.full, div.mask div.fill {.transform(rotate(-91.8deg))} div.mask div.fill.fix {.transform(rotate(-183.6deg))}}
-					&[data-progress="52"]{ div.mask.full, div.mask div.fill {.transform(rotate(-93.6deg))} div.mask div.fill.fix {.transform(rotate(-187.2deg))}}
-					&[data-progress="53"]{ div.mask.full, div.mask div.fill {.transform(rotate(-95.4deg))} div.mask div.fill.fix {.transform(rotate(-190.8deg))}}
-					&[data-progress="54"]{ div.mask.full, div.mask div.fill {.transform(rotate(-97.2deg))} div.mask div.fill.fix {.transform(rotate(-194.4deg))}}
-					&[data-progress="55"]{ div.mask.full, div.mask div.fill {.transform(rotate(-99deg))} div.mask div.fill.fix {.transform(rotate(-198deg))}}
-					&[data-progress="56"]{ div.mask.full, div.mask div.fill {.transform(rotate(-100.8deg))} div.mask div.fill.fix {.transform(rotate(-201.6deg))}}
-					&[data-progress="57"]{ div.mask.full, div.mask div.fill {.transform(rotate(-102.6deg))} div.mask div.fill.fix {.transform(rotate(-205.2deg))}}
-					&[data-progress="58"]{ div.mask.full, div.mask div.fill {.transform(rotate(-104.4deg))} div.mask div.fill.fix {.transform(rotate(-208.8deg))}}
-					&[data-progress="59"]{ div.mask.full, div.mask div.fill {.transform(rotate(-106.2deg))} div.mask div.fill.fix {.transform(rotate(-212.4deg))}}
-					&[data-progress="60"]{ div.mask.full, div.mask div.fill {.transform(rotate(-108deg))} div.mask div.fill.fix {.transform(rotate(-216deg))}}
-					&[data-progress="61"]{ div.mask.full, div.mask div.fill {.transform(rotate(-109.8deg))} div.mask div.fill.fix {.transform(rotate(-219.6deg))}}
-					&[data-progress="62"]{ div.mask.full, div.mask div.fill {.transform(rotate(-111.6deg))} div.mask div.fill.fix {.transform(rotate(-223.2deg))}}
-					&[data-progress="63"]{ div.mask.full, div.mask div.fill {.transform(rotate(-113.4deg))} div.mask div.fill.fix {.transform(rotate(-226.8deg))}}
-					&[data-progress="64"]{ div.mask.full, div.mask div.fill {.transform(rotate(-115.2deg))} div.mask div.fill.fix {.transform(rotate(-230.4deg))}}
-					&[data-progress="65"]{ div.mask.full, div.mask div.fill {.transform(rotate(-117deg))} div.mask div.fill.fix {.transform(rotate(-234deg))}}
-					&[data-progress="66"]{ div.mask.full, div.mask div.fill {.transform(rotate(-118.8deg))} div.mask div.fill.fix {.transform(rotate(-237.6deg))}}
-					&[data-progress="67"]{ div.mask.full, div.mask div.fill {.transform(rotate(-120.6deg))} div.mask div.fill.fix {.transform(rotate(-241.2deg))}}
-					&[data-progress="68"]{ div.mask.full, div.mask div.fill {.transform(rotate(-122.4deg))} div.mask div.fill.fix {.transform(rotate(-244.8deg))}}
-					&[data-progress="69"]{ div.mask.full, div.mask div.fill {.transform(rotate(-124.2deg))} div.mask div.fill.fix {.transform(rotate(-248.4deg))}}
-					&[data-progress="70"]{ div.mask.full, div.mask div.fill {.transform(rotate(-126deg))} div.mask div.fill.fix {.transform(rotate(-252deg))}}
-					&[data-progress="71"]{ div.mask.full, div.mask div.fill {.transform(rotate(-127.8deg))} div.mask div.fill.fix {.transform(rotate(-255.6deg))}}
-					&[data-progress="72"]{ div.mask.full, div.mask div.fill {.transform(rotate(-129.6deg))} div.mask div.fill.fix {.transform(rotate(-259.2deg))}}
-					&[data-progress="73"]{ div.mask.full, div.mask div.fill {.transform(rotate(-131.4deg))} div.mask div.fill.fix {.transform(rotate(-262.8deg))}}
-					&[data-progress="74"]{ div.mask.full, div.mask div.fill {.transform(rotate(-133.2deg))} div.mask div.fill.fix {.transform(rotate(-266.4deg))}}
-					&[data-progress="75"]{ div.mask.full, div.mask div.fill {.transform(rotate(-135deg))} div.mask div.fill.fix {.transform(rotate(-270deg))}}
-					&[data-progress="76"]{ div.mask.full, div.mask div.fill {.transform(rotate(-136.8deg))} div.mask div.fill.fix {.transform(rotate(-273.6deg))}}
-					&[data-progress="77"]{ div.mask.full, div.mask div.fill {.transform(rotate(-138.6deg))} div.mask div.fill.fix {.transform(rotate(-277.2deg))}}
-					&[data-progress="78"]{ div.mask.full, div.mask div.fill {.transform(rotate(-140.4deg))} div.mask div.fill.fix {.transform(rotate(-280.8deg))}}
-					&[data-progress="79"]{ div.mask.full, div.mask div.fill {.transform(rotate(-142.2deg))} div.mask div.fill.fix {.transform(rotate(-284.4deg))}}
-					&[data-progress="80"]{ div.mask.full, div.mask div.fill {.transform(rotate(-144deg))} div.mask div.fill.fix {.transform(rotate(-288deg))}}
-					&[data-progress="81"]{ div.mask.full, div.mask div.fill {.transform(rotate(-145.8deg))} div.mask div.fill.fix {.transform(rotate(-291.6deg))}}
-					&[data-progress="82"]{ div.mask.full, div.mask div.fill {.transform(rotate(-147.6deg))} div.mask div.fill.fix {.transform(rotate(-295.2deg))}}
-					&[data-progress="83"]{ div.mask.full, div.mask div.fill {.transform(rotate(-149.4deg))} div.mask div.fill.fix {.transform(rotate(-298.8deg))}}
-					&[data-progress="84"]{ div.mask.full, div.mask div.fill {.transform(rotate(-151.2deg))} div.mask div.fill.fix {.transform(rotate(-302.4deg))}}
-					&[data-progress="85"]{ div.mask.full, div.mask div.fill {.transform(rotate(-153deg))} div.mask div.fill.fix {.transform(rotate(-306deg))}}
-					&[data-progress="86"]{ div.mask.full, div.mask div.fill {.transform(rotate(-154.8deg))} div.mask div.fill.fix {.transform(rotate(-309.6deg))}}
-					&[data-progress="87"]{ div.mask.full, div.mask div.fill {.transform(rotate(-156.6deg))} div.mask div.fill.fix {.transform(rotate(-313.2deg))}}
-					&[data-progress="88"]{ div.mask.full, div.mask div.fill {.transform(rotate(-158.4deg))} div.mask div.fill.fix {.transform(rotate(-316.8deg))}}
-					&[data-progress="89"]{ div.mask.full, div.mask div.fill {.transform(rotate(-160.2deg))} div.mask div.fill.fix {.transform(rotate(-320.4deg))}}
-					&[data-progress="90"]{ div.mask.full, div.mask div.fill {.transform(rotate(-162deg))} div.mask div.fill.fix {.transform(rotate(-324deg))}}
-					&[data-progress="91"]{ div.mask.full, div.mask div.fill {.transform(rotate(-163.8deg))} div.mask div.fill.fix {.transform(rotate(-327.6deg))}}
-					&[data-progress="92"]{ div.mask.full, div.mask div.fill {.transform(rotate(-165.6deg))} div.mask div.fill.fix {.transform(rotate(-331.2deg))}}
-					&[data-progress="93"]{ div.mask.full, div.mask div.fill {.transform(rotate(-167.4deg))} div.mask div.fill.fix {.transform(rotate(-334.8deg))}}
-					&[data-progress="94"]{ div.mask.full, div.mask div.fill {.transform(rotate(-169.2deg))} div.mask div.fill.fix {.transform(rotate(-338.4deg))}}
-					&[data-progress="95"]{ div.mask.full, div.mask div.fill {.transform(rotate(-171deg))} div.mask div.fill.fix {.transform(rotate(-342deg))}}
-					&[data-progress="96"]{ div.mask.full, div.mask div.fill {.transform(rotate(-172.8deg))} div.mask div.fill.fix {.transform(rotate(-345.6deg))}}
-					&[data-progress="97"]{ div.mask.full, div.mask div.fill {.transform(rotate(-174.6deg))} div.mask div.fill.fix {.transform(rotate(-349.2deg))}}
-					&[data-progress="98"]{ div.mask.full, div.mask div.fill {.transform(rotate(-176.4deg))} div.mask div.fill.fix {.transform(rotate(-352.8deg))}}
-					&[data-progress="99"]{ div.mask.full, div.mask div.fill {.transform(rotate(-178.2deg))} div.mask div.fill.fix {.transform(rotate(-356.4deg))}}
-					&[data-progress="100"]{ div.mask.full, div.mask div.fill {.transform(rotate(-180deg))} div.mask div.fill.fix {.transform(rotate(-360deg))}}
+					&[data-progress="0"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="1"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="2"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="3"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="4"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="5"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="6"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="7"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="8"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="9"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="10"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="11"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="12"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="13"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="14"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="15"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="16"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="17"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="18"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="19"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="20"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="21"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="22"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="23"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="24"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="25"]{ div.number, div.mask div.fill { .animation(borderBlink 0.5s infinite)}}
+					&[data-progress="0"]{ div.number:after {content:"0"} div.mask.full, div.mask div.fill {.transform(rotate(-0deg))} div.mask div.fill.fix {.transform(rotate(-0deg))}}
+					&[data-progress="1"]{ div.number:after {content:"1"} div.mask.full, div.mask div.fill {.transform(rotate(-1.8deg))} div.mask div.fill.fix {.transform(rotate(-3.6deg))}}
+					&[data-progress="2"]{ div.number:after {content:"2"} div.mask.full, div.mask div.fill {.transform(rotate(-3.6deg))} div.mask div.fill.fix {.transform(rotate(-7.2deg))}}
+					&[data-progress="3"]{ div.number:after {content:"3"} div.mask.full, div.mask div.fill {.transform(rotate(-5.4deg))} div.mask div.fill.fix {.transform(rotate(-10.8deg))}}
+					&[data-progress="4"]{ div.number:after {content:"4"} div.mask.full, div.mask div.fill {.transform(rotate(-7.2deg))} div.mask div.fill.fix {.transform(rotate(-14.4deg))}}
+					&[data-progress="5"]{ div.number:after {content:"5"} div.mask.full, div.mask div.fill {.transform(rotate(-9deg))} div.mask div.fill.fix {.transform(rotate(-18deg))}}
+					&[data-progress="6"]{ div.number:after {content:"6"} div.mask.full, div.mask div.fill {.transform(rotate(-10.8deg))} div.mask div.fill.fix {.transform(rotate(-21.6deg))}}
+					&[data-progress="7"]{ div.number:after {content:"7"} div.mask.full, div.mask div.fill {.transform(rotate(-12.6deg))} div.mask div.fill.fix {.transform(rotate(-25.2deg))}}
+					&[data-progress="8"]{ div.number:after {content:"8"} div.mask.full, div.mask div.fill {.transform(rotate(-14.4deg))} div.mask div.fill.fix {.transform(rotate(-28.8deg))}}
+					&[data-progress="9"]{ div.number:after {content:"9"} div.mask.full, div.mask div.fill {.transform(rotate(-16.2deg))} div.mask div.fill.fix {.transform(rotate(-32.4deg))}}
+					&[data-progress="10"]{ div.number:after {content:"10"} div.mask.full, div.mask div.fill {.transform(rotate(-18deg))} div.mask div.fill.fix {.transform(rotate(-36deg))}}
+					&[data-progress="11"]{ div.number:after {content:"11"} div.mask.full, div.mask div.fill {.transform(rotate(-19.8deg))} div.mask div.fill.fix {.transform(rotate(-39.6deg))}}
+					&[data-progress="12"]{ div.number:after {content:"12"} div.mask.full, div.mask div.fill {.transform(rotate(-21.6deg))} div.mask div.fill.fix {.transform(rotate(-43.2deg))}}
+					&[data-progress="13"]{ div.number:after {content:"13"} div.mask.full, div.mask div.fill {.transform(rotate(-23.4deg))} div.mask div.fill.fix {.transform(rotate(-46.8deg))}}
+					&[data-progress="14"]{ div.number:after {content:"14"} div.mask.full, div.mask div.fill {.transform(rotate(-25.2deg))} div.mask div.fill.fix {.transform(rotate(-50.4deg))}}
+					&[data-progress="15"]{ div.number:after {content:"15"} div.mask.full, div.mask div.fill {.transform(rotate(-27deg))} div.mask div.fill.fix {.transform(rotate(-54deg))}}
+					&[data-progress="16"]{ div.number:after {content:"16"} div.mask.full, div.mask div.fill {.transform(rotate(-28.8deg))} div.mask div.fill.fix {.transform(rotate(-57.6deg))}}
+					&[data-progress="17"]{ div.number:after {content:"17"} div.mask.full, div.mask div.fill {.transform(rotate(-30.6deg))} div.mask div.fill.fix {.transform(rotate(-61.2deg))}}
+					&[data-progress="18"]{ div.number:after {content:"18"} div.mask.full, div.mask div.fill {.transform(rotate(-32.4deg))} div.mask div.fill.fix {.transform(rotate(-64.8deg))}}
+					&[data-progress="19"]{ div.number:after {content:"19"} div.mask.full, div.mask div.fill {.transform(rotate(-34.2deg))} div.mask div.fill.fix {.transform(rotate(-68.4deg))}}
+					&[data-progress="20"]{ div.number:after {content:"20"} div.mask.full, div.mask div.fill {.transform(rotate(-36deg))} div.mask div.fill.fix {.transform(rotate(-72deg))}}
+					&[data-progress="21"]{ div.number:after {content:"21"} div.mask.full, div.mask div.fill {.transform(rotate(-37.8deg))} div.mask div.fill.fix {.transform(rotate(-75.6deg))}}
+					&[data-progress="22"]{ div.number:after {content:"22"} div.mask.full, div.mask div.fill {.transform(rotate(-39.6deg))} div.mask div.fill.fix {.transform(rotate(-79.2deg))}}
+					&[data-progress="23"]{ div.number:after {content:"23"} div.mask.full, div.mask div.fill {.transform(rotate(-41.4deg))} div.mask div.fill.fix {.transform(rotate(-82.8deg))}}
+					&[data-progress="24"]{ div.number:after {content:"24"} div.mask.full, div.mask div.fill {.transform(rotate(-43.2deg))} div.mask div.fill.fix {.transform(rotate(-86.4deg))}}
+					&[data-progress="25"]{ div.number:after {content:"25"} div.mask.full, div.mask div.fill {.transform(rotate(-45deg))} div.mask div.fill.fix {.transform(rotate(-90deg))}}
+					&[data-progress="26"]{ div.number:after {content:"26"} div.mask.full, div.mask div.fill {.transform(rotate(-46.8deg))} div.mask div.fill.fix {.transform(rotate(-93.6deg))}}
+					&[data-progress="27"]{ div.number:after {content:"27"} div.mask.full, div.mask div.fill {.transform(rotate(-48.6deg))} div.mask div.fill.fix {.transform(rotate(-97.2deg))}}
+					&[data-progress="28"]{ div.number:after {content:"28"} div.mask.full, div.mask div.fill {.transform(rotate(-50.4deg))} div.mask div.fill.fix {.transform(rotate(-100.8deg))}}
+					&[data-progress="29"]{ div.number:after {content:"29"} div.mask.full, div.mask div.fill {.transform(rotate(-52.2deg))} div.mask div.fill.fix {.transform(rotate(-104.4deg))}}
+					&[data-progress="30"]{ div.number:after {content:"30"} div.mask.full, div.mask div.fill {.transform(rotate(-54deg))} div.mask div.fill.fix {.transform(rotate(-108deg))}}
+					&[data-progress="31"]{ div.number:after {content:"31"} div.mask.full, div.mask div.fill {.transform(rotate(-55.8deg))} div.mask div.fill.fix {.transform(rotate(-111.6deg))}}
+					&[data-progress="32"]{ div.number:after {content:"32"} div.mask.full, div.mask div.fill {.transform(rotate(-57.6deg))} div.mask div.fill.fix {.transform(rotate(-115.2deg))}}
+					&[data-progress="33"]{ div.number:after {content:"33"} div.mask.full, div.mask div.fill {.transform(rotate(-59.4deg))} div.mask div.fill.fix {.transform(rotate(-118.8deg))}}
+					&[data-progress="34"]{ div.number:after {content:"34"} div.mask.full, div.mask div.fill {.transform(rotate(-61.2deg))} div.mask div.fill.fix {.transform(rotate(-122.4deg))}}
+					&[data-progress="35"]{ div.number:after {content:"35"} div.mask.full, div.mask div.fill {.transform(rotate(-63deg))} div.mask div.fill.fix {.transform(rotate(-126deg))}}
+					&[data-progress="36"]{ div.number:after {content:"36"} div.mask.full, div.mask div.fill {.transform(rotate(-64.8deg))} div.mask div.fill.fix {.transform(rotate(-129.6deg))}}
+					&[data-progress="37"]{ div.number:after {content:"37"} div.mask.full, div.mask div.fill {.transform(rotate(-66.6deg))} div.mask div.fill.fix {.transform(rotate(-133.2deg))}}
+					&[data-progress="38"]{ div.number:after {content:"38"} div.mask.full, div.mask div.fill {.transform(rotate(-68.4deg))} div.mask div.fill.fix {.transform(rotate(-136.8deg))}}
+					&[data-progress="39"]{ div.number:after {content:"39"} div.mask.full, div.mask div.fill {.transform(rotate(-70.2deg))} div.mask div.fill.fix {.transform(rotate(-140.4deg))}}
+					&[data-progress="40"]{ div.number:after {content:"40"} div.mask.full, div.mask div.fill {.transform(rotate(-72deg))} div.mask div.fill.fix {.transform(rotate(-144deg))}}
+					&[data-progress="41"]{ div.number:after {content:"41"} div.mask.full, div.mask div.fill {.transform(rotate(-73.8deg))} div.mask div.fill.fix {.transform(rotate(-147.6deg))}}
+					&[data-progress="42"]{ div.number:after {content:"42"} div.mask.full, div.mask div.fill {.transform(rotate(-75.6deg))} div.mask div.fill.fix {.transform(rotate(-151.2deg))}}
+					&[data-progress="43"]{ div.number:after {content:"43"} div.mask.full, div.mask div.fill {.transform(rotate(-77.4deg))} div.mask div.fill.fix {.transform(rotate(-154.8deg))}}
+					&[data-progress="44"]{ div.number:after {content:"44"} div.mask.full, div.mask div.fill {.transform(rotate(-79.2deg))} div.mask div.fill.fix {.transform(rotate(-158.4deg))}}
+					&[data-progress="45"]{ div.number:after {content:"45"} div.mask.full, div.mask div.fill {.transform(rotate(-81deg))} div.mask div.fill.fix {.transform(rotate(-162deg))}}
+					&[data-progress="46"]{ div.number:after {content:"46"} div.mask.full, div.mask div.fill {.transform(rotate(-82.8deg))} div.mask div.fill.fix {.transform(rotate(-165.6deg))}}
+					&[data-progress="47"]{ div.number:after {content:"47"} div.mask.full, div.mask div.fill {.transform(rotate(-84.6deg))} div.mask div.fill.fix {.transform(rotate(-169.2deg))}}
+					&[data-progress="48"]{ div.number:after {content:"48"} div.mask.full, div.mask div.fill {.transform(rotate(-86.4deg))} div.mask div.fill.fix {.transform(rotate(-172.8deg))}}
+					&[data-progress="49"]{ div.number:after {content:"49"} div.mask.full, div.mask div.fill {.transform(rotate(-88.2deg))} div.mask div.fill.fix {.transform(rotate(-176.4deg))}}
+					&[data-progress="50"]{ div.number:after {content:"50"} div.mask.full, div.mask div.fill {.transform(rotate(-90deg))} div.mask div.fill.fix {.transform(rotate(-180deg))}}
+					&[data-progress="51"]{ div.number:after {content:"51"} div.mask.full, div.mask div.fill {.transform(rotate(-91.8deg))} div.mask div.fill.fix {.transform(rotate(-183.6deg))}}
+					&[data-progress="52"]{ div.number:after {content:"52"} div.mask.full, div.mask div.fill {.transform(rotate(-93.6deg))} div.mask div.fill.fix {.transform(rotate(-187.2deg))}}
+					&[data-progress="53"]{ div.number:after {content:"53"} div.mask.full, div.mask div.fill {.transform(rotate(-95.4deg))} div.mask div.fill.fix {.transform(rotate(-190.8deg))}}
+					&[data-progress="54"]{ div.number:after {content:"54"} div.mask.full, div.mask div.fill {.transform(rotate(-97.2deg))} div.mask div.fill.fix {.transform(rotate(-194.4deg))}}
+					&[data-progress="55"]{ div.number:after {content:"55"} div.mask.full, div.mask div.fill {.transform(rotate(-99deg))} div.mask div.fill.fix {.transform(rotate(-198deg))}}
+					&[data-progress="56"]{ div.number:after {content:"56"} div.mask.full, div.mask div.fill {.transform(rotate(-100.8deg))} div.mask div.fill.fix {.transform(rotate(-201.6deg))}}
+					&[data-progress="57"]{ div.number:after {content:"57"} div.mask.full, div.mask div.fill {.transform(rotate(-102.6deg))} div.mask div.fill.fix {.transform(rotate(-205.2deg))}}
+					&[data-progress="58"]{ div.number:after {content:"58"} div.mask.full, div.mask div.fill {.transform(rotate(-104.4deg))} div.mask div.fill.fix {.transform(rotate(-208.8deg))}}
+					&[data-progress="59"]{ div.number:after {content:"59"} div.mask.full, div.mask div.fill {.transform(rotate(-106.2deg))} div.mask div.fill.fix {.transform(rotate(-212.4deg))}}
+					&[data-progress="60"]{ div.number:after {content:"60"} div.mask.full, div.mask div.fill {.transform(rotate(-108deg))} div.mask div.fill.fix {.transform(rotate(-216deg))}}
+					&[data-progress="61"]{ div.number:after {content:"61"} div.mask.full, div.mask div.fill {.transform(rotate(-109.8deg))} div.mask div.fill.fix {.transform(rotate(-219.6deg))}}
+					&[data-progress="62"]{ div.number:after {content:"62"} div.mask.full, div.mask div.fill {.transform(rotate(-111.6deg))} div.mask div.fill.fix {.transform(rotate(-223.2deg))}}
+					&[data-progress="63"]{ div.number:after {content:"63"} div.mask.full, div.mask div.fill {.transform(rotate(-113.4deg))} div.mask div.fill.fix {.transform(rotate(-226.8deg))}}
+					&[data-progress="64"]{ div.number:after {content:"64"} div.mask.full, div.mask div.fill {.transform(rotate(-115.2deg))} div.mask div.fill.fix {.transform(rotate(-230.4deg))}}
+					&[data-progress="65"]{ div.number:after {content:"65"} div.mask.full, div.mask div.fill {.transform(rotate(-117deg))} div.mask div.fill.fix {.transform(rotate(-234deg))}}
+					&[data-progress="66"]{ div.number:after {content:"66"} div.mask.full, div.mask div.fill {.transform(rotate(-118.8deg))} div.mask div.fill.fix {.transform(rotate(-237.6deg))}}
+					&[data-progress="67"]{ div.number:after {content:"67"} div.mask.full, div.mask div.fill {.transform(rotate(-120.6deg))} div.mask div.fill.fix {.transform(rotate(-241.2deg))}}
+					&[data-progress="68"]{ div.number:after {content:"68"} div.mask.full, div.mask div.fill {.transform(rotate(-122.4deg))} div.mask div.fill.fix {.transform(rotate(-244.8deg))}}
+					&[data-progress="69"]{ div.number:after {content:"69"} div.mask.full, div.mask div.fill {.transform(rotate(-124.2deg))} div.mask div.fill.fix {.transform(rotate(-248.4deg))}}
+					&[data-progress="70"]{ div.number:after {content:"70"} div.mask.full, div.mask div.fill {.transform(rotate(-126deg))} div.mask div.fill.fix {.transform(rotate(-252deg))}}
+					&[data-progress="71"]{ div.number:after {content:"71"} div.mask.full, div.mask div.fill {.transform(rotate(-127.8deg))} div.mask div.fill.fix {.transform(rotate(-255.6deg))}}
+					&[data-progress="72"]{ div.number:after {content:"72"} div.mask.full, div.mask div.fill {.transform(rotate(-129.6deg))} div.mask div.fill.fix {.transform(rotate(-259.2deg))}}
+					&[data-progress="73"]{ div.number:after {content:"73"} div.mask.full, div.mask div.fill {.transform(rotate(-131.4deg))} div.mask div.fill.fix {.transform(rotate(-262.8deg))}}
+					&[data-progress="74"]{ div.number:after {content:"74"} div.mask.full, div.mask div.fill {.transform(rotate(-133.2deg))} div.mask div.fill.fix {.transform(rotate(-266.4deg))}}
+					&[data-progress="75"]{ div.number:after {content:"75"} div.mask.full, div.mask div.fill {.transform(rotate(-135deg))} div.mask div.fill.fix {.transform(rotate(-270deg))}}
+					&[data-progress="76"]{ div.number:after {content:"76"} div.mask.full, div.mask div.fill {.transform(rotate(-136.8deg))} div.mask div.fill.fix {.transform(rotate(-273.6deg))}}
+					&[data-progress="77"]{ div.number:after {content:"77"} div.mask.full, div.mask div.fill {.transform(rotate(-138.6deg))} div.mask div.fill.fix {.transform(rotate(-277.2deg))}}
+					&[data-progress="78"]{ div.number:after {content:"78"} div.mask.full, div.mask div.fill {.transform(rotate(-140.4deg))} div.mask div.fill.fix {.transform(rotate(-280.8deg))}}
+					&[data-progress="79"]{ div.number:after {content:"79"} div.mask.full, div.mask div.fill {.transform(rotate(-142.2deg))} div.mask div.fill.fix {.transform(rotate(-284.4deg))}}
+					&[data-progress="80"]{ div.number:after {content:"80"} div.mask.full, div.mask div.fill {.transform(rotate(-144deg))} div.mask div.fill.fix {.transform(rotate(-288deg))}}
+					&[data-progress="81"]{ div.number:after {content:"81"} div.mask.full, div.mask div.fill {.transform(rotate(-145.8deg))} div.mask div.fill.fix {.transform(rotate(-291.6deg))}}
+					&[data-progress="82"]{ div.number:after {content:"82"} div.mask.full, div.mask div.fill {.transform(rotate(-147.6deg))} div.mask div.fill.fix {.transform(rotate(-295.2deg))}}
+					&[data-progress="83"]{ div.number:after {content:"83"} div.mask.full, div.mask div.fill {.transform(rotate(-149.4deg))} div.mask div.fill.fix {.transform(rotate(-298.8deg))}}
+					&[data-progress="84"]{ div.number:after {content:"84"} div.mask.full, div.mask div.fill {.transform(rotate(-151.2deg))} div.mask div.fill.fix {.transform(rotate(-302.4deg))}}
+					&[data-progress="85"]{ div.number:after {content:"85"} div.mask.full, div.mask div.fill {.transform(rotate(-153deg))} div.mask div.fill.fix {.transform(rotate(-306deg))}}
+					&[data-progress="86"]{ div.number:after {content:"86"} div.mask.full, div.mask div.fill {.transform(rotate(-154.8deg))} div.mask div.fill.fix {.transform(rotate(-309.6deg))}}
+					&[data-progress="87"]{ div.number:after {content:"87"} div.mask.full, div.mask div.fill {.transform(rotate(-156.6deg))} div.mask div.fill.fix {.transform(rotate(-313.2deg))}}
+					&[data-progress="88"]{ div.number:after {content:"88"} div.mask.full, div.mask div.fill {.transform(rotate(-158.4deg))} div.mask div.fill.fix {.transform(rotate(-316.8deg))}}
+					&[data-progress="89"]{ div.number:after {content:"89"} div.mask.full, div.mask div.fill {.transform(rotate(-160.2deg))} div.mask div.fill.fix {.transform(rotate(-320.4deg))}}
+					&[data-progress="90"]{ div.number:after {content:"90"} div.mask.full, div.mask div.fill {.transform(rotate(-162deg))} div.mask div.fill.fix {.transform(rotate(-324deg))}}
+					&[data-progress="91"]{ div.number:after {content:"91"} div.mask.full, div.mask div.fill {.transform(rotate(-163.8deg))} div.mask div.fill.fix {.transform(rotate(-327.6deg))}}
+					&[data-progress="92"]{ div.number:after {content:"92"} div.mask.full, div.mask div.fill {.transform(rotate(-165.6deg))} div.mask div.fill.fix {.transform(rotate(-331.2deg))}}
+					&[data-progress="93"]{ div.number:after {content:"93"} div.mask.full, div.mask div.fill {.transform(rotate(-167.4deg))} div.mask div.fill.fix {.transform(rotate(-334.8deg))}}
+					&[data-progress="94"]{ div.number:after {content:"94"} div.mask.full, div.mask div.fill {.transform(rotate(-169.2deg))} div.mask div.fill.fix {.transform(rotate(-338.4deg))}}
+					&[data-progress="95"]{ div.number:after {content:"95"} div.mask.full, div.mask div.fill {.transform(rotate(-171deg))} div.mask div.fill.fix {.transform(rotate(-342deg))}}
+					&[data-progress="96"]{ div.number:after {content:"96"} div.mask.full, div.mask div.fill {.transform(rotate(-172.8deg))} div.mask div.fill.fix {.transform(rotate(-345.6deg))}}
+					&[data-progress="97"]{ div.number:after {content:"97"} div.mask.full, div.mask div.fill {.transform(rotate(-174.6deg))} div.mask div.fill.fix {.transform(rotate(-349.2deg))}}
+					&[data-progress="98"]{ div.number:after {content:"98"} div.mask.full, div.mask div.fill {.transform(rotate(-176.4deg))} div.mask div.fill.fix {.transform(rotate(-352.8deg))}}
+					&[data-progress="99"]{ div.number:after {content:"99"} div.mask.full, div.mask div.fill {.transform(rotate(-178.2deg))} div.mask div.fill.fix {.transform(rotate(-356.4deg))}}
+					&[data-progress="100"]{ div.number:after {content:"100"} div.mask.full, div.mask div.fill {.transform(rotate(-180deg))} div.mask div.fill.fix {.transform(rotate(-360deg))}}
 				}
 			}
 		}
+	}
+}
+@keyframes borderBlink {
+	from {
+		color:#DDDDDD;
+		border-color:#CCCCCC;
+	}
+	50% {
+		color:#d03838;
+		border-color:#d03838;
+	}
+	to {
+		color:#DDDDDD;
+		border-color:#CCCCCC;
 	}
 }
 /*--------------------*/
@@ -952,37 +1013,57 @@ div.createroombox {
 /*--------------------*/
 div.footer {
 	display:flex;
-	display:none;
 	flex-shrink:0;
 	flex-direction:column;
 	align-items:center;
-	margin-top:20px;
+	background:#222222;
 	div.chat {
 		box-sizing:border-box;
 		width:100%;
 		max-width:800px;
-		padding:10px;
-		padding-top:6px;
-		background:#F4F4F4;
-		box-shadow:0px 0px 0px 6px rgba(0,0,0,0.2);
+		padding:10px 0px;
 		border-top-left-radius:4px;
 		border-top-right-radius:4px;
 		.user-select(text);
 		div.messages {
 			height:110px;
 			overflow-y:scroll;
+			&:hover::-webkit-scrollbar {
+				display:block;
+				width:8px;
+			}
+			&::-webkit-scrollbar {
+				display:none;
+			}
+			&::-webkit-scrollbar-track {
+				background:transparent;
+				border-radius:4px;
+			}
+			&::-webkit-scrollbar-thumb {
+				background:rgba(0,0,0,0.2);
+				border-radius:4px;
+			}
+			&::-webkit-scrollbar-thumb:hover {
+				background:rgba(0,0,0,0.3);
+			}
 			div.row {
+				color:#DDDDDD;
 				padding:2px 0px;
 				word-break:break-all;
 				&.notice {
-					color:#A00000;
+					color:#ffdb72;
 					font-weight:600;
+					&.join {
+						color:#79dca1;
+					}
+					&.leave {
+						color:#ff8c8c;
+					}
 				}
 				&.message {
 
 				}
 				span {
-					vertical-align:middle;
 					&.user {
 						font-weight:600;
 						margin-right:4px;
@@ -991,9 +1072,16 @@ div.footer {
 			}
 		}
 		div.input {
-			padding-top:6px;
+			padding-top:10px;
 			input {
 				width:100%;
+				color:#DDDDDD;
+				border:1px solid transparent;
+				background:rgba(0,0,0,0.2);
+				&:focus {
+					border:1px solid #3a6a8a;
+					box-shadow:none;
+				}
 			}
 		}
 	}
@@ -1125,7 +1213,7 @@ div#stats {
 	position:fixed;
 	top:10px;
 	left:10px;
-	z-index:1;
+	z-index:9999;
 	div {
 		position:relative !important;
 	}

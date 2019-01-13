@@ -2,12 +2,12 @@ var Lobby = {};
 
 Lobby.updatePlayers = function(){
 	$(".lobby div.player").each(function(){
-		if(!Game.players.exists($(this).attr("data-id"))){
+		if(!Core.client.players.exists($(this).attr("data-id"))){
 			$(this).remove();
 		}
 	});
-	for(let i in Game.players.getPlayers()){
-		let player = Game.players.getPlayers()[i];
+	for(let i in Core.client.players.getPlayers()){
+		let player = Core.client.players.getPlayers()[i];
 		let element = $("div.player[data-id="+player.getId()+"]");
 		if(element.length == 0){
 			$("[data-team="+player.getTeam().id+"] div.list").append('\
@@ -47,22 +47,22 @@ Lobby.droppable = {
 		if(Session.isAdmin()){
 			let target = $(event.target);
 			let team = Team.fromId(target.closest("[data-team]").attr("data-team"));
-			let player = Game.players.get($(ui.draggable).attr("data-id"));
+			let player = Core.client.players.get($(ui.draggable).attr("data-id"));
 			if(player.team != team){
 				$(ui.draggable).appendTo(this);
-				Game.client.movePlayerRequest(player,team);
+				Core.client.movePlayerRequest(player,team);
 			}
 		}
 	}
 };
 
 Lobby.updateSettings = function(){
-	$("#game-map").val(Game.settings.map);
-	$("#game-mode").val(Game.settings.mode.id);
-	$("#game-timelimit").val(Game.settings.time);
-	$("[data-scorelimit="+Game.settings.mode.id+"]").val(Game.settings.score);
-	$("div[data-gamemode]").attr("data-gamemode",Game.settings.mode.id);
-	if(Session.isAdmin() && Game.state == State.LOBBY){
+	$("#game-map").val(Core.client.settings.map);
+	$("#game-mode").val(Core.client.settings.mode.id);
+	$("#game-timelimit").val(Core.client.settings.time);
+	$("[data-scorelimit="+Core.client.settings.mode.id+"]").val(Core.client.settings.score);
+	$("div[data-gamemode]").attr("data-gamemode",Core.client.settings.mode.id);
+	if(Session.isAdmin() && Core.client.state == State.LOBBY){
 		$("#game-map").prop("disabled",false);
 		$("#game-mode").prop("disabled",false);
 		$("#game-timelimit").prop("disabled",false);
@@ -77,35 +77,35 @@ Lobby.updateSettings = function(){
 
 $(function(){
 	$("#game-map").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.client.settingsRequest(Settings.MAP,$(this).val());
+		Core.client.settingsRequest(Settings.MAP,$(this).val());
 	});
 
 	$("#game-mode").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.client.settingsRequest(Settings.MODE,$(this).val());
+		Core.client.settingsRequest(Settings.MODE,$(this).val());
 	});
 
 	$("#game-timelimit").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.client.settingsRequest(Settings.TIME,$(this).val());
+		Core.client.settingsRequest(Settings.TIME,$(this).val());
 	});
 
 	$("[data-scorelimit]").change(function(event){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state == State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state == State.GAME || !Session.isAdmin()){
 			event.preventDefault();
 			return;
 		}
-		Game.client.settingsRequest(Settings.SCORE,$(this).val());
+		Core.client.settingsRequest(Settings.SCORE,$(this).val());
 	});
 	//--------------------------------------------------------------------------
 	var leaveBox = new ModalBox({
@@ -119,7 +119,7 @@ $(function(){
 	leaveBox.setBody("Are you sure you want to leave the room?");
 	leaveBox.onSubmit(function(){
 		leaveBox.hide();
-		Game.leave();
+		Core.client.leave();
 		Core.setView(View.ROOMS);
 		RoomList.update();
 	});
@@ -134,7 +134,7 @@ $(function(){
 	});
 
 	$("#link-room-button").click(function(){
-		linkBox.setBody("<span class='label'>Share this link to invite people</span><input type='text' value='"+location.href+"share/"+Game.client.socket.host+"' readonly style='width:100%'/>");
+		linkBox.setBody("<span class='label'>Share this link to invite people</span><input type='text' value='"+location.href+"share/"+Core.client.socket.host+"' readonly style='width:100%'/>");
 		linkBox.show();
 		$("input",linkBox.getContent()).select();
 		$("input",linkBox.getContent()).click(function(){
@@ -146,32 +146,43 @@ $(function(){
 	});
 	//--------------------------------------------------------------------------
 	$("#play-button").click(function(){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || !Session.isAdmin()){
 			return;
 		}
-		Game.client.stateRequest(State.GAME);
+		Core.client.stateRequest(State.GAME);
 	});
 
 	$("#stop-button").click(function(){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || !Session.isAdmin()){
 			return;
 		}
-		Game.client.stateRequest(State.LOBBY);
+		Core.client.stateRequest(State.LOBBY);
 	});
 
 	$("#pause-button").click(function(){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state != State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state != State.GAME || !Session.isAdmin()){
 			return;
 		}
-		Game.client.pauseRequest(true);
+		Core.client.pauseRequest(true);
 	});
 
 	$("#resume-button").click(function(){
-		if(Core.view != View.GAME || Game.view != View.GAME_LOBBY || Game.state != State.GAME || !Session.isAdmin()){
+		if(Core.view != View.GAME || Core.client.view != View.GAME_LOBBY || Core.client.state != State.GAME || !Session.isAdmin()){
 			return;
 		}
-		Game.client.pauseRequest(false);
+		Core.client.pauseRequest(false);
 	});
+	//--------------------------------------------------------------------------
+	$(document).on("keydown",function(event){
+		if(Core.view != View.GAME || event.which != Keyboard.ESCAPE){
+			return;
+		}
+		if(Core.client.state == State.GAME){
+			if(Core.client.view == View.GAME_LOBBY) Core.client.setView(View.GAME_CANVAS);
+			else Core.client.setView(View.GAME_LOBBY);
+		}
+	});
+	//--------------------------------------------------------------------------
 
 	Events.listen(Events.STATE_CHANGE,function(state){
 		if(state == State.LOBBY){
@@ -179,22 +190,27 @@ $(function(){
 			$("#stop-button").hide();
 			$("#pause-button").hide();
 			$("#resume-button").hide();
+			Core.client.setView(View.GAME_LOBBY);
 		}
 		else if(state == State.GAME){
 			$("#play-button").hide();
 			$("#stop-button").show();
 			$("#pause-button").show();
+			$("#resume-button").hide();
+			Core.client.setView(View.GAME_CANVAS);
 		}
 		Lobby.updateSettings();
 	});
 
 	Events.listen(Events.PAUSE_CHANGE,function(paused){
-		if(paused){
-			$("#pause-button").hide();
-			$("#resume-button").show();
-		} else {
-			$("#pause-button").show();
-			$("#resume-button").hide();
+		if(Core.client.state == State.GAME){
+			if(paused){
+				$("#pause-button").hide();
+				$("#resume-button").show();
+			} else {
+				$("#pause-button").show();
+				$("#resume-button").hide();
+			}
 		}
 	});
 	//--------------------------------------------------------------------------

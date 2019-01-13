@@ -94,24 +94,26 @@
 <div data-view="game">
 	<div class="header">
 		<div class="wrap-game" data-game-view="canvas">
-			<div class="game">
-				<canvas id="game-canvas"></canvas>
-				<div class="wrap-headscore">
-					<div class="headscore">
-						<div class="team red">
-							<div class="score">17</div>
-						</div>
-						<div class="time">
-							<div id="game-time">01:26</div>
-						</div>
-						<div class="team blue">
-							<div class="score">36</div>
-						</div>
+			<div class="wrap-headscore">
+				<div class="headscore">
+					<div class="team red">
+						<div class="score">17</div>
+					</div>
+					<div class="time">
+						<div id="game-time">01:26</div>
+					</div>
+					<div class="team blue">
+						<div class="score">36</div>
 					</div>
 				</div>
+			</div>
+			<div class="game">
+				<canvas id="game-canvas"></canvas>
+				<div class="scope"></div>
 				<div class="wrap-statusbar">
-					<div class="statusbar">
-						<div class="progress" data-progress="80">
+					<div class="health">
+						{var $progress = rand(1,100)}
+						<div class="progress" data-progress="{$progress}">
 							<div class="mask full">
 								<div class="fill"></div>
 							</div>
@@ -120,9 +122,10 @@
 								<div class="fill fix"></div>
 							</div>
 							<div class="empty"></div>
-							<div class="number">80</div>
+							<div class="number"></div>
 						</div>
 					</div>
+					<div class="ammo"><span>30</span><span>/</span><span>240</span></div>
 				</div>
 			</div>
 		</div>
@@ -235,7 +238,13 @@
 	</div>
 	<div class="footer">
 		<div class="chat">
-			<div class="messages" data-js="messages"></div>
+			<div class="messages" data-js="messages">
+				<div class="row notice join"><span>FreeWall has joined the room</span></div>
+				<div class="row message"><span class="user">FreeWall:</span><span>lorem ipsum dolor sit amet :D</span></div>
+				<div class="row notice leave"><span>FreeWall has left the room</span></div>
+				<div class="row message"><span class="user">FreeWall:</span><span>lorem ipsum dolor sit amet :D</span></div>
+				<div class="row notice"><span>Game started by FreeWall</span></div>
+			</div>
 			<div class="input">
 				<input type="text" id="chat-input" maxlength="256" placeholder="Press [ENTER] to send a message"/>
 			</div>

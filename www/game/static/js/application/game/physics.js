@@ -40,6 +40,12 @@ var Physics = function(){
 		this.world.removeBody(object.getPhysicsObject());
 	};
 
+	this.clear = function(){
+		for(let i in this.objects){
+			this.remove(this.objects[i]);
+		}
+	};
+
 	this.getWorld = function(){
 		return this.world;
 	};

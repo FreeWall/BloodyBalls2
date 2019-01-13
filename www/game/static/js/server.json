@@ -18,10 +18,8 @@
   "application/game/settings.js",
   "application/game/state.js",
 
-  "application/game/gameserver.js",
-  "application/game/physics.js",
-
   "application/views/chat.js",
 
-  "application/server.js"
+  "application/game/physics.js",
+  "application/game/game.server.js"
 ]

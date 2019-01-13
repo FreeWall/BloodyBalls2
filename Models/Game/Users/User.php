@@ -6,7 +6,7 @@ use Models\Database\BaseEntity;
 
 class User extends BaseEntity {
 
-	const EXPIRE_TIMEOUT = 30;
+	const EXPIRE_TIMEOUT = 300;
 
 	protected function load(array $data = null):?array {
 		return ($data != null ? $data : Database::fetch("SELECT * FROM users WHERE user_id = ?",$this->getId()));

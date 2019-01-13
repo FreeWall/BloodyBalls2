@@ -12,7 +12,14 @@ var SocketServer = function(){
 	this.init = function(password,maxplayers,callback){
 		this.password = password;
 		this.maxplayers = maxplayers;
-		this.peer = new Peer({host:'46.28.107.69'});
+		this.peer = new Peer({host:'46.28.107.69','iceServers':[
+				{url:'stun:46.28.107.69:3478'},
+				{
+					url:'turn:46.28.107.69:3478',
+					credential:'test',
+					username:'test'
+				},
+		]});
 		this.peer.on("open",function(id){
 			_this.id = id;
 			if(callback && typeof(callback) === "function") callback(id);
@@ -61,19 +68,19 @@ var SocketServer = function(){
 	};
 
 	this.onOpened = function(peer,metadata){
-		Game.server.postMessage({channel:Channel.BRIDGE_OPENED,data:{peer:peer,metadata:metadata}});
+		Core.client.server.postMessage({channel:Channel.BRIDGE_OPENED,data:{peer:peer,metadata:metadata}});
 	};
 
 	this.onClosed = function(peer){
-		Game.server.postMessage({channel:Channel.BRIDGE_CLOSED,data:{peer:peer}});
+		Core.client.server.postMessage({channel:Channel.BRIDGE_CLOSED,data:{peer:peer}});
 	};
 
 	this.onData = function(peer,channel,data){
-		Game.server.postMessage({channel:Channel.BRIDGE_DATA,data:{peer:peer,channel:channel,data:data}});
+		Core.client.server.postMessage({channel:Channel.BRIDGE_DATA,data:{peer:peer,channel:channel,data:data}});
 	};
 
 	this.onError = function(peer){
-		Game.server.postMessage({channel:Channel.BRIDGE_ERROR,data:{peer:peer}});
+		Core.client.server.postMessage({channel:Channel.BRIDGE_ERROR,data:{peer:peer}});
 	};
 
 	window.onunload = window.onbeforeunload = function(){

@@ -2,11 +2,12 @@ var Core = {};
 
 Core.view = null;
 
+Core.client = new GameClient();
+
 Core.init = function(){
-	Game.init();
 	Core.setView(View.LOADING);
 
-	Game.client.init(function(){
+	Core.client.init(function(){
 		Core.setView(View.LOGIN);
 		LoginView.init(function(){
 			Core.setView(View.ROOMS);
@@ -29,7 +30,7 @@ Core.setView = function(view){
 		},100);
 	}
 	else if(view == View.GAME){
-		Game.setView(View.GAME_LOBBY);
+		Core.client.setView(View.GAME_LOBBY);
 	}
 };
 
@@ -48,8 +49,13 @@ Core.api = function(path,args,callback){
 
 $(function(){
 	$("div.wrapper").show();
-	//Core.init();
 
-	Core.setView(View.GAME);
-	Game.setView(View.GAME_CANVAS);
+	// DEBUG
+	let url = new URL(window.location.href);
+	if(url.searchParams.get("game") == null) Core.init();
+	else {
+		Core.setView(View.GAME);
+		Core.client.setView(View.GAME_CANVAS);
+		Core.client.renderer.init();
+	}
 });

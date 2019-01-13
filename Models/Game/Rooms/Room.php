@@ -8,7 +8,7 @@ use Models\Game\Users\UserRepository;
 
 class Room extends BaseEntity {
 
-	const EXPIRE_TIMEOUT = 30;
+	const EXPIRE_TIMEOUT = 300;
 
 	protected function load(array $data = null):?array {
 		return ($data != null ? $data : Database::fetch("SELECT * FROM rooms WHERE room_id = ?",$this->getId()));

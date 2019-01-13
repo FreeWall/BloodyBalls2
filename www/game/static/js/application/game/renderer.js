@@ -3,18 +3,21 @@ var Renderer = function(){
 
 	let _this = this;
 
+	this.canvas = null;
 	this.objects = {};
+
+	this.scope = null;
 
 	this.init = function(){
 		if(window.WebGLRenderingContext){
-			var canvas = $("#game-canvas")[0];
-			var context = canvas.getContext("webgl");
+			this.canvas = $("#game-canvas")[0];
+			let context = this.canvas.getContext("webgl");
 			if(!context){
 				Core.error("WebGL is not available");
 				return;
 			}
 		}
-		this.renderer = new PIXI.WebGLRenderer(800,800,{antialias:true,view:$("#game-canvas")[0]});
+		this.renderer = new PIXI.WebGLRenderer(750,750,{antialias:true,transparent:true,view:this.canvas});
 		this.stage = new PIXI.Stage();
 		this.container = new PIXI.DisplayObjectContainer();
 		this.stage.addChild(this.container);
@@ -28,6 +31,12 @@ var Renderer = function(){
 	this.remove = function(object){
 		delete this.objects[object.getId()];
 		this.container.removeChild(object.getRenderObject());
+	};
+
+	this.clear = function(){
+		for(let i in this.objects){
+			this.remove(this.objects[i]);
+		}
 	};
 
 	this.tick = function(){

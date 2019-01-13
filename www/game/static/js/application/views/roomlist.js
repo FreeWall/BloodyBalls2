@@ -31,11 +31,10 @@ RoomList.join = function(connectBox,connectErrorBox,password){
 		Core.api("room",{action:"join",id:RoomList.connectingId},function(data){
 			if(data){
 				$(".rows div.row:nth-child(2)",connectBox.getContent()).text("Connecting to host ...");
-				Game.client.join(data['host'],password,function(){
+				Core.client.join(data,password,function(){
 					$(".rows div.row:nth-child(3)",connectBox.getContent()).text("Awaiting state ...");
 				},function(){
 					connectBox.hide();
-					Game.join(data);
 				},function(){
 					connectBox.hide();
 					connectErrorBox.show();
@@ -49,9 +48,9 @@ RoomList.join = function(connectBox,connectErrorBox,password){
 };
 
 RoomList.create = function(name,password,maxplayers,callback){
-	Game.createServer(password,maxplayers,function(id){
+	Core.client.createServer(password,maxplayers,function(id){
 		Core.api("room",{action:"create",host:id,name:name,password:password,maxplayers:maxplayers},function(data){
-			Game.client.join(data['host'],password,function(){
+			Core.client.join(data,password,function(){
 			},function(){
 				callback(data);
 			});
@@ -161,7 +160,7 @@ $(function(){
 			newbox.setClose(true);
 			newbox.hide();
 			$("#create-room-form input, #create-room-form select").prop("disabled",false);
-			Game.join(data,true);
+			//Game.join(data,true);
 		});
 		return false;
 	});

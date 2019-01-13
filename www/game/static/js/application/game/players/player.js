@@ -12,10 +12,12 @@ var Player = function(id,name,country,peer){
 	this.host = false;
 	this.admin = false;
 
-	this.keyboard = new Keyboard();
-
 	this.physicsObject = null;
 	this.renderObject = null;
+
+	this.keyboard = new Keyboard();
+	this.inputs = [];
+	this.input_seq = 0;
 
 	this.getId = function(){
 		return this.id;
@@ -57,7 +59,7 @@ var Player = function(id,name,country,peer){
 				fixedRotation:true,
 			});
 			let shape = new p2.Circle(22/2);
-			shape.material = Game.physics.materials.player;
+			shape.material = Core.client.physics.materials.player;
 			this.physicsObject.addShape(shape);
 		}
 		return this.physicsObject;
@@ -65,6 +67,7 @@ var Player = function(id,name,country,peer){
 
 	this.getRenderObject = function(){
 		if(this.renderObject == null){
+			new PIXI.Texture.fromImage("images/player"+(color == 1 ? "Blue" : "Red")+".png")
 		}
 		return this.renderObject;
 	};
@@ -95,6 +98,15 @@ var Player = function(id,name,country,peer){
 		this.ping = data.ping;
 		this.country = data.country;
 		this.admin = data.admin;
+	};
+
+	this.handleInput = function(keyboard){
+		let input = [];
+		this.input_seq ++;
+		this.inputs.push({
+			keyboard:keyboard.toDifferenceObject(this.keyboard),
+			seq:this.input_seq,
+		});
 	};
 };
 

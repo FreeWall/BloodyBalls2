@@ -1,47 +1,79 @@
 var Keyboard = function(data){
 
-	this.UP = data ? data[Keyboard.UP] : false;
-	this.DOWN = data ? data[Keyboard.DOWN] : false;
-	this.LEFT = data ? data[Keyboard.LEFT] : false;
-	this.RIGHT = data ? data[Keyboard.RIGHT] : false;
-	this.SPACE = data ? data[Keyboard.SPACE] : false;
-	this.RELOAD = data ? data[Keyboard.RELOAD] : false;
+	this.data = {};
+	this.data[Keyboard.UP] = data ? data[Keyboard.UP] : false;
+	this.data[Keyboard.DOWN] = data ? data[Keyboard.DOWN] : false;
+	this.data[Keyboard.LEFT] = data ? data[Keyboard.LEFT] : false;
+	this.data[Keyboard.RIGHT] = data ? data[Keyboard.RIGHT] : false;
+	this.data[Keyboard.SPACE] = data ? data[Keyboard.SPACE] : false;
+	this.data[Keyboard.RELOAD] = data ? data[Keyboard.RELOAD] : false;
+	this.data[Keyboard.MOUSE_LEFT] = data ? data[Keyboard.MOUSE_LEFT] : false;
+	this.data[Keyboard.MOUSE_RIGHT] = data ? data[Keyboard.MOUSE_RIGHT] : false;
+	this.data[Keyboard.MOUSE_MIDDLE] = data ? data[Keyboard.MOUSE_MIDDLE] : false;
 
-	this.isUP = function(){
-		return this.UP;
+	this.isUp = function(){
+		return this.data[Keyboard.UP];
 	};
 
-	this.isDOWN = function(){
-		return this.DOWN;
+	this.isDown = function(){
+		return this.data[Keyboard.DOWN];
 	};
 
-	this.isLEFT = function(){
-		return this.LEFT;
+	this.isLeft = function(){
+		return this.data[Keyboard.LEFT];
 	};
 
-	this.isRIGHT = function(){
-		return this.RIGHT;
+	this.isRight = function(){
+		return this.data[Keyboard.RIGHT];
 	};
 
-	this.isSPACE = function(){
-		return this.SPACE;
+	this.isSpace = function(){
+		return this.data[Keyboard.SPACE];
 	};
 
-	this.isRELOAD = function(){
-		return this.RELOAD;
+	this.isReload = function(){
+		return this.data[Keyboard.RELOAD];
+	};
+
+	this.isMouseLeft = function(){
+		return this.data[Keyboard.MOUSE_LEFT];
+	};
+
+	this.isMouseRight = function(){
+		return this.data[Keyboard.MOUSE_RIGHT];
+	};
+
+	this.isMouseMiddle = function(){
+		return this.data[Keyboard.MOUSE_MIDDLE];
 	};
 
 	this.toObject = function(){
-		return {
-			up: this.UP,
-			down: this.DOWN,
-			left: this.LEFT,
-			right: this.RIGHT,
-			space: this.SPACE,
-			reload: this.RELOAD,
-		};
+		return data;
+	};
+
+	this.toDifferenceObject = function(keyboard){
+		keyboard = keyboard.toObject();
+		let object = {};
+		for(let i in keyboard){
+			if(this.data[i] != keyboard[i]){
+				object[i] = this.data[i];
+			}
+		}
+		return object;
+	};
+
+	this.equals = function(keyboard){
+		keyboard = keyboard.toObject();
+		for(let i in keyboard){
+			if(this.data[i] != keyboard[i]) return false;
+		}
+		return true;
 	};
 };
+
+Keyboard.MOUSE_LEFT = 1;
+Keyboard.MOUSE_RIGHT = 3;
+Keyboard.MOUSE_MIDDLE = 2;
 
 Keyboard.UP = 87;
 Keyboard.DOWN = 83;

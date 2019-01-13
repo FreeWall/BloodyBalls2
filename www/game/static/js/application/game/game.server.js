@@ -1,3 +1,4 @@
+importScripts("/static/js/vendor/p2.min.js");
 var GameServer = function(){
 
 	let _this = this;
@@ -13,9 +14,15 @@ var GameServer = function(){
 	this.players = new Players();
 	this.settings = new Settings();
 
+	this.localTime = 0;
+	this.dt = new Date().getTime();
+	this.dtLast = new Date().getTime();
+
 	this.create = function(){
 		this.destroy();
 		this.pingInterval = setInterval(this.sendPingUpdate,1000);
+		this.dt = new Date().getTime();
+		this.dtLast = new Date().getTime();
 	};
 
 	this.sendPingUpdate = function(){
@@ -112,13 +119,15 @@ var GameServer = function(){
 	Events.listen(Events.CONNECTED,function(peer,player){
 		_this.sendPlayers();
 		_this.sendSettings(peer);
-		_this.sendChatNotice(player.getName()+" has joined the room");
+		_this.socket.send(peer,Channel.SERVER_STATE,{state:_this.state});
+		_this.socket.send(peer,Channel.SERVER_PAUSE,{pause:_this.paused});
+		_this.socket.sendToAll(Channel.SERVER_CHAT,{type:Chat.NOTICE_JOIN,message:player.getName()+" has joined the room"});
 	});
 
 	Events.listen(Events.DISCONNECTED,function(peer,player){
 		_this.players.remove(player);
 		_this.socket.sendToAll(Channel.SERVER_PLAYER_REMOVE,player.toObject());
-		_this.sendChatNotice(player.getName()+" has left the room");
+		_this.socket.sendToAll(Channel.SERVER_CHAT,{type:Chat.NOTICE_LEAVE,message:player.getName()+" has left the room"});
 	});
 
 	Events.listen(Events.STATE_CHANGE,function(state){
@@ -131,10 +140,15 @@ var GameServer = function(){
 
 	this.tick = function(){
 		if(_this.state == State.GAME && !_this.paused){
-
+			_this.dt = new Date().getTime()-_this.dtLast;
+			_this.dtLast = new Date().getTime();
+			_this.localTime += _this.dt/1000.0;
 		}
 		requestAnimationFrame(_this.tick);
 	};
 
 	this.tick();
 };
+
+var Server = new GameServer();
+Server.create();

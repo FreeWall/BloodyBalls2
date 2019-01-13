@@ -21,10 +21,9 @@
   "application/game/settings.js",
   "application/game/state.js",
 
-  "application/game/gameclient.js",
+  "application/game/game.client.js",
   "application/game/renderer.js",
   "application/game/physics.js",
-  "application/game/game.js",
 
   "application/views/login.js",
   "application/views/roomlist.js",
