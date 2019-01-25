@@ -11,12 +11,16 @@ var Players = function(){
 	};
 
 	this.create = function(name,country,peer){
-		let player = new Player(++this.IDS,Strings.escape(name),country,peer);
-		if(true || this.length() == 0){
-			player.host = true;
-			player.admin = true;
+		for(let i=0;i<5;i++){
+			let player = new Player(++this.IDS,Strings.escape(name),country,peer);
+			if(true || this.length() == 0){
+				player.host = true;
+				player.admin = true;
+			}
+			player.getPhysicsObject().position = [200,200];
+			player.getPhysicsObject().velocity = [10,0];
+			this.add(player);
 		}
-		this.add(player);
 	};
 
 	this.get = function(id){

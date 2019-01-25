@@ -1,5 +1,7 @@
 var Core = {};
 
+Core.DEBUG = false;
+
 Core.view = null;
 
 Core.client = new GameClient();
@@ -12,7 +14,13 @@ Core.init = function(){
 		LoginView.init(function(){
 			Core.setView(View.ROOMS);
 			RoomList.update();
+			if(Core.DEBUG){
+				RoomList.create(Session.getName()+"'s room",null,10,function(){});
+			}
 		});
+		if(Core.DEBUG){
+			$("#nickinput").trigger(jQuery.Event("keydown",{which:13}));
+		}
 	},function(){
 		Core.error("Could not connect to server");
 	});
@@ -50,12 +58,8 @@ Core.api = function(path,args,callback){
 $(function(){
 	$("div.wrapper").show();
 
-	// DEBUG
 	let url = new URL(window.location.href);
-	if(url.searchParams.get("game") == null) Core.init();
-	else {
-		Core.setView(View.GAME);
-		Core.client.setView(View.GAME_CANVAS);
-		Core.client.renderer.init();
-	}
+	if(url.searchParams.get("game") != null) Core.DEBUG = true;
+
+	Core.init();
 });

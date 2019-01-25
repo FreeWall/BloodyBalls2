@@ -2,6 +2,8 @@ var GameClient = function(){
 
 	let _this = this;
 
+	this.IDS = 0;
+
 	this.id = null;
 	this.joined = false;
 	this.view = null;
@@ -14,10 +16,11 @@ var GameClient = function(){
 	this.paused = false;
 
 	this.stats = new Stats();
-	this.physics = new Physics();
-	this.renderer = new Renderer();
+	this.physics = Physics;
+	this.renderer = Renderer;
 
 	this.players = new Players();
+	this.walls = new Walls();
 	this.settings = new Settings();
 
 	this.joinCallback = function(){};
@@ -177,9 +180,25 @@ var GameClient = function(){
 			_this.renderer.clear();
 		}
 		else if(state == State.GAME){
+			let width = 10;
+			let height = 10;
+			for(let x=0;x<=width;x++){
+				for(let y=0;y<=width;y++){
+					if(x == 0 || y == 0 || x == width || y == height){
+						_this.testCreateWall(150+x*32,150+y*32);
+					}
+				}
+			}
+			//_this.testCreateWall(150+32+32,150+32);
+			//_this.testCreateWall(150+32,150+32+32);
+
 			for(let i in _this.players.getPlayers()){
 				_this.physics.add(_this.players.get(i));
 				_this.renderer.add(_this.players.get(i));
+			}
+			for(let i in _this.walls.getWalls()){
+				_this.physics.add(_this.walls.get(i));
+				_this.renderer.add(_this.walls.get(i));
 			}
 		}
 	});
@@ -192,5 +211,10 @@ var GameClient = function(){
 			_this.stats.end();
 		}
 		window.requestAnimationFrame(_this.tick);
+	};
+
+	this.testCreateWall = function(x,y){
+		let wall = _this.walls.create("wall2");
+		wall.getPhysicsObject().position = [x,y];
 	};
 };

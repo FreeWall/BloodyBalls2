@@ -12,7 +12,7 @@ use Models\Game\Users\UserRepository;
 class RoomPresenter extends BasePresenter {
 
 	public function render(){
-		usleep(500*1000);
+		//usleep(500*1000);
 		$user = UserRepository::getUser($this->getRequest()->getParam("id"));
 		if(!$user){
 			$this->setResponse(new VoidResponse());

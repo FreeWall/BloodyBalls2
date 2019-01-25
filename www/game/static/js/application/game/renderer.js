@@ -1,5 +1,5 @@
 //http://pixijs.download/release/docs/index.html
-var Renderer = function(){
+var _Renderer = function(){
 
 	let _this = this;
 
@@ -19,7 +19,7 @@ var Renderer = function(){
 		}
 		this.renderer = new PIXI.WebGLRenderer(750,750,{antialias:true,transparent:true,view:this.canvas});
 		this.stage = new PIXI.Stage();
-		this.container = new PIXI.DisplayObjectContainer();
+		this.container = new PIXI.Container();
 		this.stage.addChild(this.container);
 	};
 
@@ -46,3 +46,4 @@ var Renderer = function(){
 		this.renderer.render(this.stage);
 	};
 };
+var Renderer = new _Renderer();

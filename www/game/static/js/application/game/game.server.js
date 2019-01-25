@@ -1,4 +1,3 @@
-importScripts("/static/js/vendor/p2.min.js");
 var GameServer = function(){
 
 	let _this = this;

@@ -1,5 +1,6 @@
 //http://schteppe.github.io/p2.js/docs/
-var Physics = function(){
+if(typeof importScripts === 'function') importScripts("/static/js/vendor/p2.min.js");
+var _Physics = function(){
 
 	let _this = this;
 
@@ -21,12 +22,12 @@ var Physics = function(){
 
 		this.world.addContactMaterial(new p2.ContactMaterial(this.materials.wall,this.materials.player,{
 			friction:0,
-			restitution:0.5
+			restitution:1//TODO:0.5
 		}));
 
 		this.world.addContactMaterial(new p2.ContactMaterial(this.materials.player,this.materials.player,{
 			friction:0,
-			restitution:1
+			restitution:1//TODO:1
 		}));
 	};
 
@@ -55,7 +56,8 @@ var Physics = function(){
 		for(let i in this.objects){
 			this.objects[i].tick();
 		}
-		this.world.step(this.fixedTimeStep,this.lastTime ? (this.time-this.lastTime)/1000 : 0);
+		this.world.step(this.fixedTimeStep,this.lastTime ? (this.time-this.lastTime)/1000 : 0,0);
 		this.lastTime = this.time;
 	};
 };
+var Physics = new _Physics();

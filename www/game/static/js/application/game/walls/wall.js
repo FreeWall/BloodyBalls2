@@ -1,12 +1,8 @@
-var Wall = function(id){
-
-	const OBJECT_SIZE = 32;
+var Wall = function(id,type){
 
 	let _this = this;
-	this.id = id || ++Game.IDS;
-	this.type = null;
-
-	this.position = new Vector(0,0);
+	this.id = "w"+id;
+	this.type = type;
 
 	this.physicsObject = null;
 	this.renderObject = null;
@@ -21,8 +17,8 @@ var Wall = function(id){
 				mass:0,
 				fixedRotation:true
 			});
-			let shape = new p2.Box(OBJECT_SIZE);
-			shape.material = Game.physics.materials.wall;
+			let shape = new p2.Box({width:32,height:32});
+			shape.material = Core.client.physics.materials.wall;
 			this.physicsObject.addShape(shape);
 		}
 		return this.physicsObject;
@@ -30,11 +26,16 @@ var Wall = function(id){
 
 	this.getRenderObject = function(){
 		if(this.renderObject == null){
+			this.renderObject = new PIXI.Container();
+			let sprite = new PIXI.Sprite(new PIXI.Texture.fromImage("static/images/blocks/"+this.type+".png"));
+			this.renderObject.addChild(sprite);
 		}
 		return this.renderObject;
 	};
 
 	this.render = function(){
+		this.getRenderObject().position.x = this.getPhysicsObject().position[0];
+		this.getRenderObject().position.y = this.getPhysicsObject().position[1];
 	};
 
 	this.tick = function(){

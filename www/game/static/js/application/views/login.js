@@ -5,7 +5,7 @@ LoginView.initialized = false;
 LoginView.init = function(callback){
 	var name = Session.restoreName();
 	if(name) $("#nickinput").val(name);
-	$("#nickinput").keydown(function(event){
+	$("#nickinput").on("keydown",function(event){
 		if(event.which == 13 && !LoginView.initialized){
 			if(Core.view == View.LOGIN){
 				var name = $(this).val();

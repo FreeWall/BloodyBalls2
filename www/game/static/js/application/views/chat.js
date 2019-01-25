@@ -21,7 +21,7 @@ Chat.process = function(data){
 	else if(data.type == Chat.NOTICE_JOIN) Chat.addNotice(data.message,"join");
 	else if(data.type == Chat.NOTICE_LEAVE) Chat.addNotice(data.message,"leave");
 	else if(data.type == Chat.MESSAGE){
-		let player = Game.players.get(data.player);
+		let player = Core.client.players.get(data.player);
 		if(player) Chat.addMessage(player,data.message);
 	}
 };
@@ -34,7 +34,7 @@ Chat.reset = function(){
 	$("[data-js=messages]").empty();
 };
 
-if(typeof Game !== 'undefined'){
+if(typeof GameClient !== 'undefined'){
 	$(function(){
 		$(document).on("keydown",function(event){
 			if(Core.view == View.GAME && event.which == Keyboard.TAB){
@@ -54,7 +54,7 @@ if(typeof Game !== 'undefined'){
 			if(event.which == Keyboard.ENTER){
 				let message = $(this).val();
 				if(!Validators.isEmpty(message)){
-					Game.client.messageRequest(message);
+					Core.client.messageRequest(message);
 				}
 				$(this).val("").blur();
 				let _this = $(this);

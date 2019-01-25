@@ -6,6 +6,7 @@
   "utils/modalbox.js",
   "utils/keyboard.js",
   "utils/sounds.js",
+  "utils/maths.js",
 
   "application/network/channel.js",
   "application/network/socketclient.js",
@@ -16,6 +17,7 @@
   "application/game/players/players.js",
   "application/game/bullets/bullet.js",
   "application/game/walls/wall.js",
+  "application/game/walls/walls.js",
   "application/game/team.js",
   "application/game/mode.js",
   "application/game/settings.js",

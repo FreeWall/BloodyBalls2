@@ -1,7 +1,9 @@
 var Player = function(id,name,country,peer){
 
+	let SIZE = 14;
+
 	let _this = this;
-	this.id = id;
+	this.id = "p"+id;
 	this.name = name || null;
 	this.country = country || null;
 	this.team = Team.SPEC;
@@ -55,11 +57,13 @@ var Player = function(id,name,country,peer){
 		if(this.physicsObject == null){
 			this.physicsObject = new p2.Body({
 				mass:1,
-				damping:0.1,
+				damping:0,
 				fixedRotation:true,
+				position:[190+Maths.random(0,200),190+Maths.random(0,200)],
+				velocity:[Maths.random(-100.5,100.5),Maths.random(-100.5,100.5)]
 			});
-			let shape = new p2.Circle(22/2);
-			shape.material = Core.client.physics.materials.player;
+			let shape = new p2.Circle({radius:SIZE});
+			shape.material = Physics.materials.player;
 			this.physicsObject.addShape(shape);
 		}
 		return this.physicsObject;
@@ -67,17 +71,25 @@ var Player = function(id,name,country,peer){
 
 	this.getRenderObject = function(){
 		if(this.renderObject == null){
-			new PIXI.Texture.fromImage("images/player"+(color == 1 ? "Blue" : "Red")+".png")
+			this.renderObject = new PIXI.Container();
+			let graphics = new PIXI.Graphics();
+			graphics.beginFill(0xFFFFFF,1);
+			graphics.lineStyle(2,0x000000);
+			graphics.drawCircle(SIZE+2,SIZE+2,SIZE-1);
+			graphics.endFill();
+			this.renderObject.addChild(graphics);
 		}
 		return this.renderObject;
 	};
 
 	this.render = function(){
-		this.getRenderObject().position.x = this.getPhysicsObject().position.x;
-		this.getRenderObject().position.y = this.getPhysicsObject().position.y;
+		this.getRenderObject().position.x = this.getPhysicsObject().position[0];
+		this.getRenderObject().position.y = this.getPhysicsObject().position[1];
 	};
 
 	this.tick = function(){
+		//this.getPhysicsObject().velocity[0] += Maths.random(-10.5,10.5);
+		//this.getPhysicsObject().velocity[1] += Maths.random(-10.5,10.5);
 	};
 
 	this.toObject = function(){

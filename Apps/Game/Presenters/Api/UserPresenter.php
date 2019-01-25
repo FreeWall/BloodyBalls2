@@ -9,7 +9,7 @@ class UserPresenter extends BasePresenter {
 
 	public function render(){
 		if($this->getAction() == "init"){
-			usleep(300*1000);
+			//usleep(300*1000);
 			$id = $this->getRequest()->getHttpRequest()->getPost("id");
 			if($id){
 				$user = UserRepository::getUser($id);
